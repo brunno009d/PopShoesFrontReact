@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 
 function CalzadoCard({ calzado }) {
     console.log("Calzado recibido:", calzado);
-    //const navigate = useNavigate();
+    const navigate = useNavigate();
 
 
  return (
@@ -19,9 +19,10 @@ function CalzadoCard({ calzado }) {
          descripcion={calzado.descripcion}
          precio={calzado.precio}
        />
-       {/*<Boton variant="primary" onClick={() => navigate(`/calzados/${calzado.id}`)}>
+       <Boton variant="primary" onClick={() => 
+navigate(`/calzados/${calzado.id}`)}>
          Ver detalles
-       </Boton> */}
+       </Boton>
      </Card.Body>
    </Card>
  );

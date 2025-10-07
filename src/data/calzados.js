@@ -1,6 +1,6 @@
 const calzados = [
     {
-        id: "calz-01",
+        id: 1,
         titulo: "Air Forece 1 Triple Wiite",
         descripcion: "Descripcion",
         precio: 112000,
@@ -23,7 +23,7 @@ const calzados = [
         }
     },
     {
-        id: "calz-02",
+        id: 2,
         titulo: "Nike P-6000 Metallic Silver",
         precio: 136000,
         descripcion: "Descripcion",
@@ -46,7 +46,7 @@ const calzados = [
         }
     },
     {
-        id: "calz-03",
+        id: 3,
         titulo: "Puma Sneakers Gold",
         precio: 89000,
         descripcion: "Descripcion",
@@ -69,7 +69,7 @@ const calzados = [
         }
     },
     {
-        id: "calz-04",
+        id: 4,
         titulo: "Puma Speedcat OG",
         precio: 80000,
         descripcion: "Descripcion",
@@ -92,7 +92,7 @@ const calzados = [
         }
     },
     {
-        id: "calz-05",
+        id: 5,
         titulo: "Adidas Superstar Iridescent",
         precio: 94000,
         descripcion: "Descripcion",
@@ -115,7 +115,7 @@ const calzados = [
         }
     },
     {
-        id: "calz-06",
+        id: 6,
         titulo: "Adidas Samba OG Black Cat",
         precio: 94000,
         descripcion: "Descripcion",
