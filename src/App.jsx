@@ -1,7 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
 import NavBar from './components/organisms/Navbar';
 import Home from './pages/Home';
-import Calzados from './pages/Calzados';
+// import Catalogo from './pages/Catalogo';
 
 
 
@@ -11,10 +11,11 @@ function App() {
      <NavBar />
      <Routes>
        <Route path="/" element={<Home />} />
-       <Route path="/calzados" element={<Calzados />} />
+       
      </Routes>
    </>
  );
+ // <Route path="/catalogo" element={<Catalogo />} />
 }
 
 
