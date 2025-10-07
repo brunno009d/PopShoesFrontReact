@@ -138,3 +138,5 @@ const calzados = [
         }
     }
 ]
+
+export default calzados;
