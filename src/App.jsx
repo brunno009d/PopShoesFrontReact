@@ -3,7 +3,7 @@ import NavBar from './components/organisms/Navbar';
 import Home from './pages/Home';
 import Catalogo from './pages/Catalogo';
 import DetalleCalzado from './pages/DetalleCalzado';
-
+import Carrito from './pages/Carrito';
 
 
 function App() {
@@ -14,6 +14,7 @@ function App() {
        <Route path="/" element={<Home />} />
        <Route path="/catalogo" element={<Catalogo />} />   
        <Route path="/calzados/:id" element={<DetalleCalzado />} />    
+       <Route path="/carrito" element={<Carrito />} />    
      </Routes>
    </>
  );
