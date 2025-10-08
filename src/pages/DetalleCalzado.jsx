@@ -32,6 +32,7 @@ function DetalleCalzado() {
          <Texto variant="h2">{calzado.titulo}</Texto>
          <Texto variant="p">{calzado.descripcion}</Texto>
          <Texto variant="h4">${calzado.precio}</Texto>
+         <Boton>Añadir al carrito</Boton>
        </Card.Body>
      </Card>
    </Container>

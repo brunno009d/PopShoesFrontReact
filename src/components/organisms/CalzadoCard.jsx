@@ -23,6 +23,9 @@ function CalzadoCard({ calzado }) {
 navigate(`/calzados/${calzado.id}`)}>
          Ver detalles
        </Boton>
+       <Boton variant="secondary"> 
+        Comprar
+       </Boton>
      </Card.Body>
    </Card>
  );
