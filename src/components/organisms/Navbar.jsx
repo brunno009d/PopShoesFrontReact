@@ -2,7 +2,7 @@ import { Navbar, Nav, Container } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { Link } from "react-router-dom";
 
-function AppNavbar() {
+function Navbar() {
   return (
     <Navbar bg="dark" variant="dark" expand="lg" sticky="top">
       <Container>
@@ -41,7 +41,6 @@ function AppNavbar() {
               <Nav.Link>Famosos</Nav.Link>
             </LinkContainer>
           </Nav>
-
           {/* Acciones (carrito y login) */}
           <Nav>
             <LinkContainer to="/carrito">
@@ -59,4 +58,4 @@ function AppNavbar() {
   );
 }
 
-export default AppNavbar;
+export default Navbar;

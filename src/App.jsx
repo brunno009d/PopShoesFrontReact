@@ -1,14 +1,23 @@
-import { Routes, Route } from "react-router-dom";
-import AppNavbar from "./components/organisms/Navbar";
-import Home from "./pages/Home";
-import Catalogo from "./pages/Catalogo";
-import DetalleCalzado from "./pages/DetalleCalzado";
+import { Routes, Route } from 'react-router-dom';
+import NavBar from './components/organisms/Navbar';
+import Home from './pages/Home';
+import Catalogo from './pages/Catalogo';
+import DetalleCalzado from './pages/DetalleCalzado';
+import Carrito from './pages/Carrito';
+
 
 function App() {
-  return (
-    <>
-      <AppNavbar />
-
+ return (
+   <>
+     <NavBar />
+     <Routes>
+       <Route path="/" element={<Home />} />
+       <Route path="/catalogo" element={<Catalogo />} />   
+       <Route path="/calzados/:id" element={<DetalleCalzado />} />    
+       <Route path="/carrito" element={<Carrito />} />    
+     </Routes>
+   </>
+ );
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/catalogo" element={<Catalogo />} />
