@@ -18,8 +18,13 @@ function App() {
      </Routes>
    </>
  );
-
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/catalogo" element={<Catalogo />} />
+        <Route path="/calzados/:id" element={<DetalleCalzado />} />
+      </Routes>
+    </>
+  );
 }
-
 
 export default App;
