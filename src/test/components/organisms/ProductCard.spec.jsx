@@ -25,7 +25,7 @@ describe('CalzadoCard Component', () => {
    titulo: 'Producto Test',
    descripcion: 'Descripción test',
    precio: 10000,
-   imagen: 'test.jpg',
+   imagen: 'https://via.placeholder.com/300x200.png',
  };
 
 
@@ -92,6 +92,20 @@ describe('CalzadoCard Component', () => {
    expect(button).toHaveClass('btn-primary');
  });
 
+ // boton de comprar
+ it('renderiza el botón de comprar', () => {
+   render(
+    <MockCarritoProvider>
+     <MockRouter mockNavigate={mockNavigate}>
+       <CalzadoCard calzado={mockCalzado} />
+     </MockRouter>
+     </MockCarritoProvider>
+   );
+   const button = screen.getByText('Comprar');
+   expect(button).toBeTruthy();
+   expect(button).toHaveClass('btn-success');
+ });
+
 
  it('navega a detalles al hacer click en el botón', () => {
    render(
@@ -103,6 +117,6 @@ describe('CalzadoCard Component', () => {
    );
    const button = screen.getByText('Ver detalles');
    fireEvent.click(button);
-   expect(mockNavigate).toHaveBeenCalledWith('/calzados/1');
+   expect(mockNavigate).toHaveBeenCalledWith('/calzados/1', jasmine.any(Object));
  });
 });
