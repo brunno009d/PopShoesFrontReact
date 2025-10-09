@@ -7,13 +7,12 @@ import { useCart } from '../../context/CarritoContext';
 
 
 function CalzadoCard({ calzado }) {
-    console.log("Calzado recibido:", calzado);
     const navigate = useNavigate();
     const { agregarCarrito } = useCart();
 
     const handleComprar = () => {
         agregarCarrito(calzado);
-        alert(`${calzado.titulo} agregado al carrito!`);
+
     };
 
 

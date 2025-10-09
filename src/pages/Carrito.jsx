@@ -4,10 +4,13 @@ import Imagen from '../components/atoms/Imagen';
 import Boton from '../components/atoms/Boton';
 
 function Carrito() {
-  const { carrito } = useCart();
-  const { vaciarCarrito } = useCart(); 
-
+  const { carrito, vaciarCarrito, eliminarCarrito } = useCart();
+  const handleVaciar = () => {
+        vaciarCarrito();
+        alert(`Gracias por su compra`);
+    };
   if (carrito.length === 0) {
+    
     return (
       <Container className="my-5">
         <h1>Carrito de Compras</h1>
@@ -23,26 +26,26 @@ function Carrito() {
       <p>Productos en tu carrito:</p>
       
       <Row>
-        {carrito.map((item) => (
-          <Col md={4} key={item.id} className="mb-3">
+        {carrito.map((calzado) => (
+          <Col md={4} key={calzado.id} className="mb-3">
             <Card>
               <Imagen 
-                src={item.imagen} 
-                alt={item.titulo} 
+                src={calzado.imagen} 
+                alt={calzado.titulo} 
                 className="card-img-top"
                 style={{ height: '200px', objectFit: 'cover' }}
               />
               <Card.Body>
-                <h5>{item.titulo}</h5>
-                <p className="text-muted">{item.descripcion}</p>
-                <p><strong>Precio: ${item.precio.toLocaleString()}</strong></p>
-                <p><strong>Cantidad: {item.cantidad}</strong></p>
+                <h5 className="text-muted">{calzado.titulo}</h5>
+                <p><strong>Precio: ${calzado.precio.toLocaleString()}</strong></p>
+                <p><strong>Cantidad: {calzado.cantidad}</strong></p>
+                <Boton onClick={() => eliminarCarrito(calzado.id)}>Eliminar</Boton>
               </Card.Body>
             </Card>
           </Col>
         ))}
       </Row>
-      <Boton type="button" class="btn btn-lg btn-primary" >Comprar </Boton>
+      <Boton type="button" class="btn btn-lg btn-primary" onClick={handleVaciar}>Comprar </Boton>
 
     </Container>
   );
