@@ -5,12 +5,19 @@ import Imagen from '../components/atoms/Imagen.jsx';
 import Texto from '../components/atoms/Texto.jsx';
 import Boton from '../components/atoms/Boton.jsx';
 import { useNavigate } from 'react-router-dom';
+import { useCart } from '../context/CarritoContext.jsx';
 
 
 function DetalleCalzado() {
  const { id } = useParams();
  const navigate = useNavigate();
  const calzado = calzados.find((p) => p.id === parseInt(id));
+ const { agregarCarrito } = useCart();
+ 
+     const handleComprar = () => {
+         agregarCarrito(calzado);
+ 
+  };
 
 
  if (!calzado) {
@@ -32,7 +39,7 @@ function DetalleCalzado() {
          <Texto variant="h2">{calzado.titulo}</Texto>
          <Texto variant="p">{calzado.descripcion}</Texto>
          <Texto variant="h4">${calzado.precio}</Texto>
-         <Boton>Añadir al carrito</Boton>
+         <Boton onClick={handleComprar}>Añadir al carrito</Boton>
        </Card.Body>
      </Card>
    </Container>
