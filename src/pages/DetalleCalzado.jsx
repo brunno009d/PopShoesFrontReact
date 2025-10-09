@@ -1,3 +1,4 @@
+import React from 'react';
 import { Container, Card } from 'react-bootstrap';
 import { Navigate, useParams } from 'react-router-dom';
 import calzados from '../data/calzados';
