@@ -3,11 +3,17 @@ import Imagen from '../atoms/Imagen';
 import Boton from '../atoms/Boton';
 import CardCalzado from '../molecules/CardCalzado'
 import { useNavigate } from 'react-router-dom';
+import { useCart } from '../../context/CarritoContext';
 
 
 function CalzadoCard({ calzado }) {
-    console.log("Calzado recibido:", calzado);
     const navigate = useNavigate();
+    const { agregarCarrito } = useCart();
+
+    const handleComprar = () => {
+        agregarCarrito(calzado);
+
+    };
 
 
  return (
@@ -22,6 +28,9 @@ function CalzadoCard({ calzado }) {
        <Boton variant="primary" onClick={() => 
 navigate(`/calzados/${calzado.id}`)}>
          Ver detalles
+       </Boton>
+       <Boton variant="success" onClick={handleComprar}> 
+        Comprar
        </Boton>
      </Card.Body>
    </Card>
