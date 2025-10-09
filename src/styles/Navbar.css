@@ -1,0 +1,31 @@
+/* Fuente general del navbar */
+.navbar {
+  font-family: 'Poppins', sans-serif;
+  color: #ffffff; /* letras blancas por defecto */
+}
+
+/* Logo */
+.navbar-brand {
+  font-size: 2rem; /* tamaño más responsivo */
+  font-weight: bold;
+  color: #ffffff; /* logo en blanco */
+}
+
+/* Links */
+.navbar .nav-link {
+  font-size: 1.1rem;   
+  font-weight: 500;    
+  margin: 0 0.5rem;    
+  color: #ffffff; /* links blancos */
+  transition: color 0.2s ease;
+}
+
+/* Hover links */
+.navbar .nav-link:hover {
+  color: #d412ea; /* púrpura al pasar el mouse */
+}
+
+/* Fondo personalizado */
+.custom-navbar {
+  background-color: #000000; /* fondo negro */
+}
