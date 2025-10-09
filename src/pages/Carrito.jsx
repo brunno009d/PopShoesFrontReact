@@ -5,6 +5,7 @@ import Boton from '../components/atoms/Boton';
 
 function Carrito() {
   const { carrito } = useCart();
+  const { vaciarCarrito } = useCart(); 
 
   if (carrito.length === 0) {
     return (
@@ -41,7 +42,7 @@ function Carrito() {
           </Col>
         ))}
       </Row>
-      <Boton type="button" class="btn btn-lg btn-primary">Comprar</Boton>
+      <Boton type="button" class="btn btn-lg btn-primary" >Comprar </Boton>
 
     </Container>
   );

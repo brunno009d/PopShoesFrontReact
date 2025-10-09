@@ -1,8 +1,10 @@
 import { Navbar, Nav, Container } from 'react-bootstrap';
-
+import { useCart } from '../../context/CarritoContext';
 
 
 function NavBar() {
+  const { cantidadTotal } = useCart();
+
  return (
    <Navbar bg="dark" variant="dark" expand="lg">
      <Container>
@@ -12,7 +14,7 @@ function NavBar() {
          <Nav className="me-auto">
            <Nav.Link href="/">Inicio</Nav.Link>
            <Nav.Link href="/catalogo">Catalogo</Nav.Link>
-           <Nav.Link href="/carrito">Carrito</Nav.Link>
+           <Nav.Link href="/carrito">Carrito {cantidadTotal}</Nav.Link>
          </Nav>
        </Navbar.Collapse>
      </Container>
