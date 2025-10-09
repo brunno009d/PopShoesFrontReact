@@ -19,7 +19,7 @@ export const CarritoProvider = ({children}) => {
             );
             if(CalzadoActual >= 0){
                 const carritoActualizado = [...prevCarrito];
-                carritoActualizado[CalzadoActual].cantidad ++;
+                carritoActualizado[CalzadoActual].cantidad += 1;
                 return carritoActualizado;
             } else {
                 return [...prevCarrito, {...calzado, cantidad: 1}]
@@ -33,9 +33,8 @@ export const CarritoProvider = ({children}) => {
         setCarrito([]);
     }
     const actualizarNumeroCarrito = carrito.reduce(
-    (acc, calzado) => acc + calzado.cantidad, 0,
-    0
-  );
+        (acc, calzado) => acc + calzado.cantidad, 0
+    );
     return(
         <CarritoContexto.Provider value={{
             carrito,
