@@ -3,8 +3,8 @@ function Home() {
   return (
     <Container className="my-5 text-center">
       {/* Título */}
-      <h1 className="text-primary fw-bold mb-5">
-        PopShoes Lo mejor en calazados
+      <h1 className="text-dark text-primary fw-bold mb-5">
+        PopShoes Lo mejor en calzados
       </h1>
 
       {/* Sección de imágenes */}
