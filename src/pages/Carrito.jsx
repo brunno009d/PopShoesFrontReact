@@ -42,6 +42,7 @@ function Carrito() {
         ))}
       </Row>
       <Boton type="button" class="btn btn-lg btn-primary">Comprar</Boton>
+
     </Container>
   );
 }
