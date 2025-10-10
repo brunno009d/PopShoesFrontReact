@@ -1,6 +1,6 @@
 import { Container, Row, Col } from 'react-bootstrap';
 import calzados from '../data/calzados';
-import ProductCard from '../components/organisms/CalzadoCard';
+import CalzadoCard from '../components/organisms/CalzadoCard';
 
 function Catalogo() {
   return (
@@ -16,7 +16,7 @@ function Catalogo() {
             lg={3}     // 4 en pantallas grandes
             className="d-flex justify-content-center"
           >
-            <ProductCard calzado={calzado} />
+            <CalzadoCard calzado={calzado} />
           </Col>
         ))}
       </Row>

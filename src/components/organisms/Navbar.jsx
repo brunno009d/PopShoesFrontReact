@@ -34,6 +34,7 @@ function NavBar() {
           <Nav className="mx-auto text-center">
             <Nav.Link onClick={() => navigate('/')}>Inicio</Nav.Link>
             <Nav.Link onClick={() => navigate('/catalogo')}>Catálogo</Nav.Link>
+            <Nav.Link onClick={() => navigate('/blog')}>Blogs</Nav.Link>
           </Nav>
 
           {/* Carrito a la derecha */}
