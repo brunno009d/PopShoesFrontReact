@@ -7,7 +7,7 @@ import BlogCard from '../components/organisms/BlogCard';
 function Blogs() {
  return (
    <Container className="my-5">
-     <h1>Blogs</h1>
+     <h1>Blog de Calzado, sugerencias y tendencias.</h1>
      <Row>
        {blogs.map((blog) => (
          <BlogCard key={blog.id} blog={blog} />

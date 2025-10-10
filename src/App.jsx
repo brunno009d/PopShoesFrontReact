@@ -5,6 +5,7 @@ import Catalogo from './pages/Catalogo';
 import DetalleCalzado from './pages/DetalleCalzado';
 import Carrito from './pages/Carrito';
 import Blogs from './pages/Blog';
+import DetalleBlog from './pages/DetalleBlog';
 
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
        <Route path="/calzados/:id" element={<DetalleCalzado />} />   
        <Route path="/carrito" element={<Carrito />} />    
        <Route path="/blog" element={<Blogs />} />    
+       <Route path="/blogs/:id" element={<DetalleBlog />} />    
      </Routes>
    </>
  );
