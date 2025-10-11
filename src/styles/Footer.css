@@ -1,0 +1,41 @@
+.footer {
+    background-color: #000;
+    color: #fff;
+    padding: 2rem 0;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    font-family: 'Poppins', sans-serif;
+    z-index: 10;
+  }
+  
+  .footer h5 {
+    font-size: 1.1rem;
+    margin-bottom: 0.75rem;
+    color: #fff;
+    font-weight: 600;
+  }
+  
+  .footer p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: #ccc;
+  }
+  
+  .footer-logo {
+    width: 120px;
+    height: auto;
+    object-fit: contain;
+  }
+  
+  .social-links a {
+    color: #fff;
+    font-size: 1.3rem;
+    margin-right: 10px;
+    transition: color 0.3s ease;
+  }
+  
+  .social-links a:hover {
+    color: #d412ea;
+  }
+  
