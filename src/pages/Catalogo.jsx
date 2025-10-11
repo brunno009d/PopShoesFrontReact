@@ -1,3 +1,4 @@
+import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import calzados from '../data/calzados';
 import CalzadoCard from '../components/organisms/CalzadoCard';

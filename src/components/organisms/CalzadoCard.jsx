@@ -1,3 +1,4 @@
+import React from 'react';
 import { Card } from 'react-bootstrap';
 import Imagen from '../atoms/Imagen';
 import Boton from '../atoms/Boton';

@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState } from 'react';
 import { Navbar, Nav, Container, Button, Image } from 'react-bootstrap';
 import { useCart } from '../../context/CarritoContext';

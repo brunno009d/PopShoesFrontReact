@@ -1,3 +1,4 @@
+import React from 'react';
 import { Container, Row, Col, Card } from 'react-bootstrap';
 import { useCart } from '../context/CarritoContext';
 import Imagen from '../components/atoms/Imagen';
