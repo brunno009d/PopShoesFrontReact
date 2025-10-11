@@ -8,6 +8,7 @@ import Blogs from './pages/Blog';
 import DetalleBlog from './pages/DetalleBlog';
 import Login from './pages/Login';        // 🆕 agregado
 import Registro from './pages/Registro';  // 🆕 agregado
+import Footer from './components/organisms/Footer';
 
 function App() {
   return (
@@ -20,11 +21,11 @@ function App() {
         <Route path="/carrito" element={<Carrito />} />    
         <Route path="/blog" element={<Blogs />} />    
         <Route path="/blogs/:id" element={<DetalleBlog />} />    
-
         {/* 🆕 Rutas nuevas */}
         <Route path="/login" element={<Login />} />    
         <Route path="/registro" element={<Registro />} />    
       </Routes>
+      <Footer />
     </>
   );
 }
