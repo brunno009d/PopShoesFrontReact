@@ -87,9 +87,9 @@ describe('CalzadoCard Component', () => {
      </MockRouter>
      </MockCarritoProvider>
    );
-   const button = screen.getByText('Ver detalles');
+   const button = screen.getByRole('button', { name: 'Ver detalles' });
    expect(button).toBeTruthy();
-   expect(button).toHaveClass('btn-primary');
+   expect(button).toHaveClass('btn-outline-primary');
  });
 
  // boton de comprar

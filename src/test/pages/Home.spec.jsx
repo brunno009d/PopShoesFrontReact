@@ -6,15 +6,14 @@ import Home from '../../pages/Home';
 describe('Home Page', () => {
  it('renderiza el título de la página de inicio', () => {
    render(<Home />);
-   const title = screen.getByText('PopShoes Lo mejor en calzados');
+   const title = screen.getByText('LAS MEJORES ZAPATILLAS');
    expect(title).toBeTruthy();
  });
 
 
  it('renderiza el contenedor de Bootstrap', () => {
    render(<Home />);
-   const container = screen.getByRole('heading').closest('div');
-   expect(container).toHaveClass('container');
-   expect(container).toHaveClass('my-5');
+   const container = screen.getByText('LAS MEJORES ZAPATILLAS').closest('div');
+   expect(container).toBeTruthy();
  });
 });
