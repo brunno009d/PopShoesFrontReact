@@ -1,7 +1,6 @@
 import React from 'react';
 import { Container, Row, Col, Carousel } from "react-bootstrap";
-
-import "../styles/Home.css";
+import "../styles/home.css";
 
 function Home() {
   return (
