@@ -5,7 +5,7 @@ import Boton from '../atoms/Boton';
 import CardCalzado from '../molecules/CardCalzado';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../../context/CarritoContext';
-import '../../styles/CalzadoCard.css'; // Nuevo archivo de estilos
+import '../../styles/organisms/CalzadoCard.css';
 
 function CalzadoCard({ calzado }) {
   const navigate = useNavigate();

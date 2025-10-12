@@ -1,6 +1,6 @@
 import React from 'react';
 import { Container, Row, Col, Carousel } from "react-bootstrap";
-import "../styles/home.css";
+import "../styles/pages/home.css";
 import Texto from '../components/atoms/Texto';
 import Imagen from '../components/atoms/Imagen';
 
