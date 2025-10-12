@@ -4,7 +4,7 @@ import { Navbar, Nav, Container, Button, Image } from 'react-bootstrap';
 import { useCart } from '../../context/CarritoContext';
 import { useNavigate } from 'react-router-dom';
 import { Cart4 } from 'react-bootstrap-icons';
-import '../../styles/Navbar.css'; 
+import '../../styles/organisms/Navbar.css'; 
 
 function NavBar() {
   const { actualizarNumeroCarrito } = useCart();

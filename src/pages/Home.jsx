@@ -1,6 +1,8 @@
 import React from 'react';
 import { Container, Row, Col, Carousel } from "react-bootstrap";
-import "../styles/home.css";
+import "../styles/pages/home.css";
+import Texto from '../components/atoms/Texto';
+import Imagen from '../components/atoms/Imagen';
 
 function Home() {
   return (
@@ -11,7 +13,7 @@ function Home() {
           <Carousel.Item>
             <picture>
               <source media="(max-width: 768px)" srcSet="/imghome/slider1m.webp" />
-              <img
+              <Imagen
                 className="d-block w-100 slider-img"
                 src="/imghome/slider1.webp"
                 alt="Slide 1"
@@ -22,7 +24,7 @@ function Home() {
           <Carousel.Item>
             <picture>
               <source media="(max-width: 768px)" srcSet="/imghome/slider2m.webp" />
-              <img
+              <Imagen
                 className="d-block w-100 slider-img"
                 src="/imghome/slider2.webp"
                 alt="Slide 2"
@@ -33,7 +35,7 @@ function Home() {
           <Carousel.Item>
             <picture>
               <source media="(max-width: 768px)" srcSet="/imghome/slider3m.webp" />
-              <img
+              <Imagen
                 className="d-block w-100 slider-img"
                 src="/imghome/slider3.webp"
                 alt="Slide 3"
@@ -44,34 +46,34 @@ function Home() {
       </section>
 
       {/* 🔹 Título principal */}
-      <h1 className="text-center titulo-principal text-dark fw-bold mb-5">
+      <Texto variant="h1" className="text-center titulo-principal text-dark fw-bold mb-5">
         LAS MEJORES ZAPATILLAS
-      </h1>
+      </Texto>
 
       {/* 🔹 Sección banners */}
       <Container className="mb-5">
         <Row xs={2} md={3} lg={6} className="g-3">
-          <Col><img src="/imghome/banner 1.webp" alt="Banner 1" className="banner-img img-fluid " /></Col>
-          <Col><img src="/imghome/banner 2.webp" alt="Banner 2" className="banner-img img-fluid " /></Col>
-          <Col><img src="/imghome/banner 3.webp" alt="Banner 3" className="banner-img img-fluid" /></Col>
-          <Col><img src="/imghome/banner 4.webp" alt="Banner 4" className="banner-img img-fluid " /></Col>
-          <Col><img src="/imghome/banner 5.webp" alt="Banner 5" className="banner-img img-fluid " /></Col>
-          <Col><img src="/imghome/banner 6.webp" alt="Banner 6" className="banner-img img-fluid " /></Col>
+          <Col><Imagen src="/imghome/banner 1.webp" alt="Banner 1" className="banner-img img-fluid" /></Col>
+          <Col><Imagen src="/imghome/banner 2.webp" alt="Banner 2" className="banner-img img-fluid" /></Col>
+          <Col><Imagen src="/imghome/banner 3.webp" alt="Banner 3" className="banner-img img-fluid" /></Col>
+          <Col><Imagen src="/imghome/banner 4.webp" alt="Banner 4" className="banner-img img-fluid" /></Col>
+          <Col><Imagen src="/imghome/banner 5.webp" alt="Banner 5" className="banner-img img-fluid" /></Col>
+          <Col><Imagen src="/imghome/banner 6.webp" alt="Banner 6" className="banner-img img-fluid" /></Col>
         </Row>
       </Container>
 
 
       {/* 🔹 Sección estilos */}
       <Container className="text-center mb-5">
-        <h2>Encuentra el estilo que más te represente</h2>
-        <p className="text-muted">
+        <Texto variant="h2">Encuentra el estilo que más te represente</Texto>
+        <Texto variant="p" className="text-muted">
           Inspirate con los famosos más importantes del mundo de la moda y el espectáculo.
-        </p>
+        </Texto>
 
         <Row xs={1} md={3} className="g-4 mt-4">
-          <Col><img src="/imghome/estilo5.webp" alt="Img 1" className="img-fluid rounded shadow-sm" /></Col>
-          <Col><img src="/imghome/estilo4.webp" alt="Img 2" className="img-fluid rounded shadow-sm" /></Col>
-          <Col><img src="/imghome/estilo1.webp" alt="Img 3" className="img-fluid rounded shadow-sm" /></Col>
+          <Col><Imagen src="/imghome/estilo5.webp" alt="Img 1" className="img-fluid rounded shadow-sm" /></Col>
+          <Col><Imagen src="/imghome/estilo4.webp" alt="Img 2" className="img-fluid rounded shadow-sm" /></Col>
+          <Col><Imagen src="/imghome/estilo1.webp" alt="Img 3" className="img-fluid rounded shadow-sm" /></Col>
         </Row>
       </Container>
 
@@ -80,32 +82,32 @@ function Home() {
         <Row className="align-items-center">
           {/* Texto */}
           <Col md={6} className="text-center text-md-center mb-4 mb-md-0">
-            <h2>Estilo urbano</h2>
-            <p>
+            <Texto variant="h2">Estilo urbano</Texto>
+            <Texto variant="p">
               Descubre las últimas tendencias en zapatillas que combinan
               comodidad y diseño para que te destaques en cada paso.
-            </p>
+            </Texto>
           </Col>
 
           {/* Imágenes: usamos 3 Col dentro de un Row */}
           <Col md={6}>
             <Row className="justify-content-center g-3">
               <Col xs={4}>
-                <img
+                <Imagen
                   src="/imghome/estilo6.webp"
                   alt="Zapatilla 1"
                   className="img-fluid rounded shadow-sm"
                 />
               </Col>
               <Col xs={4}>
-                <img
+                <Imagen
                   src="/imghome/estilo7.webp"
                   alt="Zapatilla 2"
                   className="img-fluid rounded shadow-sm"
                 />
               </Col>
               <Col xs={4}>
-                <img
+                <Imagen
                   src="/imghome/Famosos.webp"
                   alt="Zapatilla 3"
                   className="img-fluid rounded shadow-sm"

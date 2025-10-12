@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import Boton from '../components/atoms/Boton';
+import Texto from '../components/atoms/Texto';
+import { Container } from 'react-bootstrap';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -31,16 +34,16 @@ const Login = () => {
   };
 
   return (
-    <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
+    <Container className="d-flex justify-content-center align-items-center vh-100 bg-light">
       <form
         onSubmit={manejarEnvio}
         className="bg-white p-4 rounded-4 shadow w-100"
         style={{ maxWidth: '380px' }}
         noValidate
       >
-        <h2 className="text-center mb-4 fw-bold">Iniciar sesión</h2>
+        <Texto variant="h2" className="text-center mb-4 fw-bold">Iniciar sesión</Texto>
 
-        <div className="mb-3">
+        <Container className="mb-3">
           <input
             type="email"
             placeholder="Correo electrónico"
@@ -48,10 +51,10 @@ const Login = () => {
             onChange={(e) => setEmail(e.target.value)}
             className={`form-control ${errores.email ? 'is-invalid' : ''}`}
           />
-          {errores.email && <div className="invalid-feedback">{errores.email}</div>}
-        </div>
+          {errores.email && <Container className="invalid-feedback">{errores.email}</Container>}
+        </Container>
 
-        <div className="mb-4">
+        <Container className="mb-4">
           <input
             type="password"
             placeholder="Contraseña"
@@ -59,21 +62,21 @@ const Login = () => {
             onChange={(e) => setClave(e.target.value)}
             className={`form-control ${errores.clave ? 'is-invalid' : ''}`}
           />
-          {errores.clave && <div className="invalid-feedback">{errores.clave}</div>}
-        </div>
+          {errores.clave && <Container className="invalid-feedback">{errores.clave}</Container>}
+        </Container>
 
-        <button type="submit" className="btn btn-primary w-100">
+        <Boton type="submit" variant="primary" className="w-100">
           Entrar
-        </button>
+        </Boton>
 
-        <p className="text-center mt-3">
+        <Texto variant="p" className="text-center mt-3">
           ¿No tienes cuenta?{' '}
           <Link to="/registro" className="text-decoration-none">
             Regístrate aquí
           </Link>
-        </p>
+        </Texto>
       </form>
-    </div>
+    </Container>
   );
 };
 

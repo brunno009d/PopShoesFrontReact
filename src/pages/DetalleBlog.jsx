@@ -14,7 +14,7 @@ function DetalleBlog() {
   if (!blog) {
     return (
       <Container className="my-5">
-        <h1>Blog no encontrado</h1>
+        <Texto variant="h1">Blog no encontrado</Texto>
         <Boton variant="secondary" onClick={() => navigate('/catalogo')}>
           <ArrowLeft className="me-2" /> Volver al catálogo
         </Boton>
