@@ -3,6 +3,7 @@ import { Container, Row, Col, Card } from 'react-bootstrap';
 import { useCart } from '../context/CarritoContext';
 import Imagen from '../components/atoms/Imagen';
 import Boton from '../components/atoms/Boton';
+import Texto from '../components/atoms/Texto';
 
 function Carrito() {
   const { carrito, vaciarCarrito, eliminarCarrito } = useCart();
@@ -14,8 +15,8 @@ function Carrito() {
     
     return (
       <Container className="my-5">
-        <h1>Carrito de Compras</h1>
-        <p>Tu carrito está vacío</p>
+        <Texto variant="h1" >Carrito de Compras</Texto>
+        <Texto variant="p">Tu carrito está vacío</Texto>
         <Boton type="button" class="btn btn-lg btn-primary" disabled>Comprar</Boton>
       </Container>
     );
@@ -23,8 +24,8 @@ function Carrito() {
 
   return (
     <Container className="my-5">
-      <h1>Carrito de Compras</h1>
-      <p>Productos en tu carrito:</p>
+      <Texto variant="h1">Carrito de Compras</Texto>
+      <Texto variant="p">Productos en tu carrito:</Texto>
       
       <Row>
         {carrito.map((calzado) => (
@@ -37,16 +38,16 @@ function Carrito() {
                 style={{ height: '200px', objectFit: 'cover' }}
               />
               <Card.Body>
-                <h5 className="text-muted">{calzado.titulo}</h5>
-                <p><strong>Precio: ${calzado.precio.toLocaleString()}</strong></p>
-                <p><strong>Cantidad: {calzado.cantidad}</strong></p>
+                <Texto variant="h5" className="text-muted">{calzado.titulo}</Texto>
+                <Texto variant="p"><strong>Precio: ${calzado.precio.toLocaleString()}</strong></Texto>
+                <Texto variant="p"><strong>Cantidad: {calzado.cantidad}</strong></Texto>
                 <Boton onClick={() => eliminarCarrito(calzado.id)}>Eliminar</Boton>
               </Card.Body>
             </Card>
           </Col>
         ))}
       </Row>
-      <Boton type="button" class="btn btn-lg btn-primary" onClick={handleVaciar}>Comprar </Boton>
+      <Boton type="button" className="btn btn-lg btn-primary" onClick={handleVaciar}>Comprar </Boton>
 
     </Container>
   );

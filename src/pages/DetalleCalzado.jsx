@@ -19,7 +19,7 @@ function DetalleCalzado() {
   if (!calzado) {
     return (
       <Container className="my-5 text-center">
-        <h1>Producto no encontrado</h1>
+        <Texto variant="h1">Producto no encontrado</Texto>
         <Boton variant="secondary" onClick={() => navigate('/catalogo')}>
           <ArrowLeft className="me-2" /> Volver al catálogo
         </Boton>
