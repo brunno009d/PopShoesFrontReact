@@ -30,7 +30,7 @@ function NavBar() {
           <Image
             src="./imghome/logo.webp" 
             alt="Logo PopShoes"
-            height={100}
+            height={75}
             className="me-2"
           />
         </div>

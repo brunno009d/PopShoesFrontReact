@@ -4,6 +4,10 @@
   padding: 2rem;
   text-align: center;
 }
+body {
+  padding-bottom: 120px; /* espacio para el footer */
+}
+
 
 .logo {
   height: 6em;

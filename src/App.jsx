@@ -10,6 +10,7 @@ import Login from './pages/Login';        // 🆕 agregado
 import Registro from './pages/Registro';  // 🆕 agregado
 import Footer from './components/organisms/Footer';
 
+
 function App() {
   return (
     <>
@@ -23,7 +24,8 @@ function App() {
         <Route path="/blogs/:id" element={<DetalleBlog />} />    
         {/* 🆕 Rutas nuevas */}
         <Route path="/login" element={<Login />} />    
-        <Route path="/registro" element={<Registro />} />    
+        <Route path="/registro" element={<Registro />} />
+        <Route path="/" element={<Home />} />    
       </Routes>
       <Footer />
     </>
