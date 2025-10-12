@@ -1,14 +1,13 @@
-/* Fuente general del navbar */
 .navbar {
   font-family: 'Poppins', sans-serif;
-  color: #ffffff; /* letras blancas por defecto */
+  color: #ffffff; 
 }
 
 /* Logo */
 .navbar-brand {
-  font-size: 2rem; /* tamaño más responsivo */
+  font-size: 2rem; 
   font-weight: bold;
-  color: #ffffff; /* logo en blanco */
+  color: #ffffff; 
 }
 
 /* Links */
@@ -16,16 +15,36 @@
   font-size: 1.1rem;   
   font-weight: 500;    
   margin: 0 0.5rem;    
-  color: #ffffff; /* links blancos */
+  color: #ffffff; 
   transition: color 0.2s ease;
 }
 
-/* Hover links */
+
 .navbar .nav-link:hover {
-  color: #d412ea; /* púrpura al pasar el mouse */
+  color: #d412ea; 
 }
 
-/* Fondo personalizado */
+
 .custom-navbar {
-  background-color: #000000; /* fondo negro */
+  background-color: #000000; 
+}
+
+
+@media (max-width: 991.98px) {
+  .navbar-collapse {
+    text-align: center;
+  }
+  
+  .navbar-collapse .d-flex {
+    justify-content: center;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+  
+  .navbar-collapse .d-flex .btn {
+    width: 100%;
+    max-width: 200px;
+    margin: 0 auto;
+  }
 }
