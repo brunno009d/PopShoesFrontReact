@@ -6,9 +6,10 @@ import DetalleCalzado from './pages/DetalleCalzado';
 import Carrito from './pages/Carrito';
 import Blogs from './pages/Blog';
 import DetalleBlog from './pages/DetalleBlog';
-import Login from './pages/Login';        // 🆕 agregado
-import Registro from './pages/Registro';  // 🆕 agregado
+import Login from './pages/Login';        
+import Registro from './pages/Registro'; 
 import Footer from './components/organisms/Footer';
+import NotFound from './pages/NotFound';
 
 
 function App() {
@@ -22,10 +23,10 @@ function App() {
         <Route path="/carrito" element={<Carrito />} />    
         <Route path="/blog" element={<Blogs />} />    
         <Route path="/blogs/:id" element={<DetalleBlog />} />    
-        {/* 🆕 Rutas nuevas */}
         <Route path="/login" element={<Login />} />    
         <Route path="/registro" element={<Registro />} />
         <Route path="/" element={<Home />} />    
+        <Route path="*" element={<NotFound />} />    
       </Routes>
       <Footer />
     </>
