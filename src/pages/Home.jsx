@@ -1,69 +1,47 @@
 import React from 'react';
-import { Container, Row, Col, Carousel } from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
 import "../styles/pages/home.css";
+
+// 1. Importamos tus nuevos Organismos
+import MainCarousel from '../components/organisms/MainCarousel';
+import BannerGrid from '../components/organisms/BannerGrid';
+
+// 2. Importamos los Átomos que aún se usan en el resto de la página
 import Texto from '../components/atoms/Texto';
 import Imagen from '../components/atoms/Imagen';
+
+// 3. Importamos los Datos desde tus archivos centrales
+// Nota: Usamos { } porque son exportaciones nombradas (export const)
+import { sliders } from '../data/sliders';
+import { banners } from '../data/banners';
 
 function Home() {
   return (
     <main>
-      {/* 🔹 Slider principal con controles */}
-      <section className="mb-5">
-        <Carousel>
-          <Carousel.Item>
-            <picture>
-              <source media="(max-width: 768px)" srcSet="/imghome/slider1m.webp" />
-              <Imagen
-                className="d-block w-100 slider-img"
-                src="/imghome/slider1.webp"
-                alt="Slide 1"
-              />
-            </picture>
-          </Carousel.Item>
+      {/* ----------------------------------------------------- */}
+      {/* 1. SECCIÓN HERO (CARRUSEL) - Ahora es 1 sola línea  */}
+      {/* ----------------------------------------------------- */}
+      <MainCarousel slides={sliders} />
 
-          <Carousel.Item>
-            <picture>
-              <source media="(max-width: 768px)" srcSet="/imghome/slider2m.webp" />
-              <Imagen
-                className="d-block w-100 slider-img"
-                src="/imghome/slider2.webp"
-                alt="Slide 2"
-              />
-            </picture>
-          </Carousel.Item>
 
-          <Carousel.Item>
-            <picture>
-              <source media="(max-width: 768px)" srcSet="/imghome/slider3m.webp" />
-              <Imagen
-                className="d-block w-100 slider-img"
-                src="/imghome/slider3.webp"
-                alt="Slide 3"
-              />
-            </picture>
-          </Carousel.Item>
-        </Carousel>
-      </section>
-
-      {/* 🔹 Título principal */}
+      {/* ----------------------------------------------------- */}
+      {/* 2. TÍTULO PRINCIPAL                                   */}
+      {/* ----------------------------------------------------- */}
       <Texto variant="h1" className="text-center titulo-principal text-dark fw-bold mb-5">
         LAS MEJORES ZAPATILLAS
       </Texto>
 
-      {/* 🔹 Sección banners */}
-      <Container className="mb-5">
-        <Row xs={2} md={3} lg={6} className="g-3">
-          <Col><Imagen src="/imghome/banner 1.webp" alt="Banner 1" className="banner-img img-fluid" /></Col>
-          <Col><Imagen src="/imghome/banner 2.webp" alt="Banner 2" className="banner-img img-fluid" /></Col>
-          <Col><Imagen src="/imghome/banner 3.webp" alt="Banner 3" className="banner-img img-fluid" /></Col>
-          <Col><Imagen src="/imghome/banner 4.webp" alt="Banner 4" className="banner-img img-fluid" /></Col>
-          <Col><Imagen src="/imghome/banner 5.webp" alt="Banner 5" className="banner-img img-fluid" /></Col>
-          <Col><Imagen src="/imghome/banner 6.webp" alt="Banner 6" className="banner-img img-fluid" /></Col>
-        </Row>
-      </Container>
+
+      {/* ----------------------------------------------------- */}
+      {/* 3. SECCIÓN BANNERS - Ahora es 1 sola línea          */}
+      {/* ----------------------------------------------------- */}
+      {/* Le pasamos los datos del home y configuramos 6 columnas */}
+      <BannerGrid banners={banners} columns={6} />
 
 
-      {/* 🔹 Sección estilos */}
+      {/* ----------------------------------------------------- */}
+      {/* 4. SECCIÓN ESTILOS (Aún manual, pendiente de modularizar) */}
+      {/* ----------------------------------------------------- */}
       <Container className="text-center mb-5">
         <Texto variant="h2">Encuentra el estilo que más te represente</Texto>
         <Texto variant="p" className="text-muted">
@@ -71,16 +49,17 @@ function Home() {
         </Texto>
 
         <Row xs={1} md={3} className="g-4 mt-4">
-          <Col><Imagen src="/imghome/estilo5.webp" alt="Img 1" className="img-fluid rounded shadow-sm" /></Col>
-          <Col><Imagen src="/imghome/estilo4.webp" alt="Img 2" className="img-fluid rounded shadow-sm" /></Col>
-          <Col><Imagen src="/imghome/estilo1.webp" alt="Img 3" className="img-fluid rounded shadow-sm" /></Col>
+          <Col><Imagen src="/imghome/estilo5.webp" alt="Estilo 5" className="img-fluid rounded shadow-sm" /></Col>
+          <Col><Imagen src="/imghome/estilo4.webp" alt="Estilo 4" className="img-fluid rounded shadow-sm" /></Col>
+          <Col><Imagen src="/imghome/estilo1.webp" alt="Estilo 1" className="img-fluid rounded shadow-sm" /></Col>
         </Row>
       </Container>
 
-      {/* Sección Estilo urbano */}
+      {/* ----------------------------------------------------- */}
+      {/* 5. SECCIÓN URBANO (Aún manual)                        */}
+      {/* ----------------------------------------------------- */}
       <Container className="my-5">
         <Row className="align-items-center">
-          {/* Texto */}
           <Col md={6} className="text-center text-md-center mb-4 mb-md-0">
             <Texto variant="h2">Estilo urbano</Texto>
             <Texto variant="p">
@@ -89,29 +68,16 @@ function Home() {
             </Texto>
           </Col>
 
-          {/* Imágenes: usamos 3 Col dentro de un Row */}
           <Col md={6}>
             <Row className="justify-content-center g-3">
               <Col xs={4}>
-                <Imagen
-                  src="/imghome/estilo6.webp"
-                  alt="Zapatilla 1"
-                  className="img-fluid rounded shadow-sm"
-                />
+                <Imagen src="/imghome/estilo6.webp" alt="Urbano 1" className="img-fluid rounded shadow-sm" />
               </Col>
               <Col xs={4}>
-                <Imagen
-                  src="/imghome/estilo7.webp"
-                  alt="Zapatilla 2"
-                  className="img-fluid rounded shadow-sm"
-                />
+                <Imagen src="/imghome/estilo7.webp" alt="Urbano 2" className="img-fluid rounded shadow-sm" />
               </Col>
               <Col xs={4}>
-                <Imagen
-                  src="/imghome/Famosos.webp"
-                  alt="Zapatilla 3"
-                  className="img-fluid rounded shadow-sm"
-                />
+                <Imagen src="/imghome/Famosos.webp" alt="Urbano 3" className="img-fluid rounded shadow-sm" />
               </Col>
             </Row>
           </Col>
@@ -122,4 +88,3 @@ function Home() {
 }
 
 export default Home;
-
