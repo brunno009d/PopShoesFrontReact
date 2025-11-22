@@ -17,7 +17,7 @@ const Registro = () => {
 
     if (!nombre.trim()) nuevosErrores.nombre = 'Por favor ingresa tu nombre';
     if (!email.trim()) nuevosErrores.email = 'Por favor ingresa tu correo';
-    if (!clave.trim()) nuevosErrores.clave = 'Por favor ingresa tu contraseña';
+    if (!clave.trim()) nuevosErrores.clave = 'Por favor ingresa tu clave';
 
     setErrores(nuevosErrores);
 
@@ -25,7 +25,7 @@ const Registro = () => {
       const nuevoUsuario = { nombre, email, clave };
       localStorage.setItem('usuarioRegistrado', JSON.stringify(nuevoUsuario));
 
-      alert('Registro completado con éxito. Ahora puedes iniciar sesión.');
+      alert('Registro completado con exito. Ahora puedes iniciar sesion.');
       navigate('/login');
     }
   };
@@ -54,7 +54,7 @@ const Registro = () => {
         <Container className="mb-3">
           <input
             type="email"
-            placeholder="Correo electrónico"
+            placeholder="Correo electronico"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className={`form-control ${errores.email ? 'is-invalid' : ''}`}
@@ -65,7 +65,7 @@ const Registro = () => {
         <Container className="mb-4">
           <input
             type="password"
-            placeholder="Contraseña"
+            placeholder="Clave"
             value={clave}
             onChange={(e) => setClave(e.target.value)}
             className={`form-control ${errores.clave ? 'is-invalid' : ''}`}
@@ -78,9 +78,9 @@ const Registro = () => {
         </Boton>
 
         <Texto variant="p" className="text-center mt-3">
-          ¿Ya tienes cuenta?{' '}
+          Ya tienes cuenta?{' '}
           <Link to="/login" className="text-decoration-none">
-            Inicia sesión
+            Inicia sesion
           </Link>
         </Texto>
       </form>
