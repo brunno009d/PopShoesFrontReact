@@ -1,22 +1,15 @@
 import React from 'react';
-import { useState } from 'react';
-import { Navbar, Nav, Container, Button, Image } from 'react-bootstrap';
+import { Navbar, Nav, Container, Button, Image, Dropdown } from 'react-bootstrap';
 import { useCart } from '../../context/CarritoContext';
-import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext'; 
+import { useNavigate, Link } from 'react-router-dom';
 import { Cart4 } from 'react-bootstrap-icons';
 import '../../styles/organisms/Navbar.css'; 
 
 function NavBar() {
   const { actualizarNumeroCarrito } = useCart();
   const navigate = useNavigate();
-  const usuario = JSON.parse(localStorage.getItem('usuarioLogueado'));
-
-  const [menuCuentaAbierto, setMenuCuentaAbierto] = useState(false);
-
-  const handleCerrarSesion = () => {
-    localStorage.removeItem('usuarioLogueado');
-    window.location.reload();
-  };
+  const { user, logout } = useAuth();
 
   return (
     <Navbar className="custom-navbar shadow-sm py-2" variant="dark" expand="lg" sticky="top">
@@ -28,7 +21,7 @@ function NavBar() {
           onClick={() => navigate('/')}
         >
           <Image
-            src="./imghome/logo.webp" 
+            src="/imghome/logo.webp" 
             alt="Logo PopShoes"
             height={75}
             className="me-2"
@@ -37,19 +30,15 @@ function NavBar() {
 
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-          {/* Enlaces */}
           <Nav className="mx-auto text-center">
-            <Nav.Link onClick={() => navigate('/')}>Inicio</Nav.Link>
-            <Nav.Link onClick={() => navigate('/catalogo')}>Catálogo</Nav.Link>
-            <Nav.Link onClick={() => navigate('/blog')}>Blogs</Nav.Link>
+            <Nav.Link as={Link} to="/">Inicio</Nav.Link>
+            <Nav.Link as={Link} to="/catalogo">Catalogo</Nav.Link>
+            <Nav.Link as={Link} to="/blog">Blogs</Nav.Link>
           </Nav>
-
-          {/* Botones a la derecha */}
           <div className="d-flex align-items-center gap-2">
-            {/* Carrito */}
             <Button
               variant="outline-light"
-              className="d-flex align-items-center position-relative"
+              className="d-flex align-items-center position-relative me-2"
               onClick={() => navigate('/carrito')}
             >
               <Cart4 className="me-2" size={18} />
@@ -64,35 +53,33 @@ function NavBar() {
               )}
             </Button>
 
-            {/* Perfil o botones de login */}
-            {usuario ? (
-              <div className="position-relative">
-                <Button
-                  variant="outline-light"
-                  onClick={() => setMenuCuentaAbierto(!menuCuentaAbierto)}
-                >
-                  {usuario.nombre}
-                </Button>
+            {user ? (
+              <Dropdown align="end">
+                <Dropdown.Toggle variant="outline-light" id="dropdown-user" className="d-flex align-items-center">
+                    {user.nombre}
+                </Dropdown.Toggle>
 
-                {menuCuentaAbierto && (
-                  <div
-                    className="position-absolute bg-white shadow rounded p-2 mt-1"
-                    style={{ right: 0, minWidth: '150px', zIndex: 1000 }}
-                  >
-                    <Button
-                      variant="light"
-                      className="w-100"
-                      onClick={handleCerrarSesion}
-                    >
-                      Cerrar sesión
-                    </Button>
-                  </div>
-                )}
-              </div>
+                <Dropdown.Menu>
+                  {user.role === 'admin' ? (
+                      <Dropdown.Item onClick={() => navigate('/admin')}>
+                        🛠 Panel Admin
+                      </Dropdown.Item>
+                  ) : (
+                      <Dropdown.Item onClick={() => navigate('/mi-cuenta')}>
+                        👤 Mi Cuenta
+                      </Dropdown.Item>
+                  )}
+                  
+                  <Dropdown.Divider />
+                  <Dropdown.Item onClick={logout} className="text-danger">
+                    Cerrar sesion
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
             ) : (
               <>
                 <Button variant="outline-light" onClick={() => navigate('/login')}>
-                  Iniciar sesión
+                  Iniciar sesion
                 </Button>
                 <Button variant="light" onClick={() => navigate('/registro')}>
                   Registrarse

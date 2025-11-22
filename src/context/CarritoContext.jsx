@@ -1,51 +1,98 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useState, useContext, useEffect } from 'react';
 
-export const CarritoContexto = createContext();
+const CarritoContext = createContext();
 
-export const CarritoProvider = ({children}) => {
+export const useCart = () => useContext(CarritoContext);
+
+export const CarritoProvider = ({ children }) => {
     const [carrito, setCarrito] = useState(() => {
-        const carritoGuardado = localStorage.getItem('carrito');
-        return carritoGuardado ? JSON.parse(carritoGuardado) : [];
+        try {
+            const storedCart = localStorage.getItem('carrito');
+            return storedCart ? JSON.parse(storedCart) : [];
+        } catch (error) {
+            return [];
+        }
     });
 
     useEffect(() => {
         localStorage.setItem('carrito', JSON.stringify(carrito));
     }, [carrito]);
 
-    const agregarCarrito = (calzado) => {
-        setCarrito((prevCarrito) => {
-            const CalzadoActual = prevCarrito.findIndex(
-                (articulo) => articulo.id === calzado.id
-            );
-            if(CalzadoActual >= 0){
-                const carritoActualizado = [...prevCarrito];
-                carritoActualizado[CalzadoActual].cantidad += 1;
-                return carritoActualizado;
-            } else {
-                return [...prevCarrito, {...calzado, cantidad: 1}]
+    // FUNCION AGREGAR 
+    const agregarCarrito = (producto, cantidad = 1) => {
+        setCarrito(prevCarrito => {
+            const stockMax = producto.stock !== undefined ? producto.stock : 0;
+
+            if (stockMax <= 0) {
+                alert("Lo sentimos, este producto esta agotado o no tiene stock definido.");
+                return prevCarrito; 
             }
-        })
-    }
+
+            const itemIndex = prevCarrito.findIndex(item => item.id === producto.id);
+            
+            if (itemIndex >= 0) {
+                const newCarrito = [...prevCarrito];
+                const itemActual = newCarrito[itemIndex];
+                if (itemActual.cantidad + cantidad <= stockMax) {
+                    newCarrito[itemIndex] = {
+                        ...itemActual,
+                        cantidad: itemActual.cantidad + cantidad
+                    };
+                } else {
+                    alert(`Stock insuficiente. Solo quedan ${stockMax} unidades y ya tienes ${itemActual.cantidad} en el carrito.`);
+                }
+                return newCarrito;
+            } else {
+                if (cantidad <= stockMax) {
+                    return [...prevCarrito, { ...producto, cantidad }];
+                } else {
+                    alert(`No puedes agregar ${cantidad} unidades. Solo hay ${stockMax} disponibles.`);
+                    return prevCarrito;
+                }
+            }
+        });
+    };
+
+    // FUNCION ELIMINAR
     const eliminarCarrito = (id) => {
-        setCarrito((prevCarrito) => prevCarrito.filter((articulo) => articulo.id !== id));
-    }
+        setCarrito(prev => prev.filter(item => item.id !== id));
+    };
+
+    // FUNCION VACIAR
     const vaciarCarrito = () => {
         setCarrito([]);
-    }
-    const actualizarNumeroCarrito = carrito.reduce(
-        (acc, calzado) => acc + calzado.cantidad, 0
-    );
-    return(
-        <CarritoContexto.Provider value={{
+    };
+
+    // FUNCION ACTUALIZAR CANTIDAD 
+    const actualizarCantidad = (id, nuevaCantidad) => {
+        setCarrito(prev => prev.map(item => {
+            if (item.id === id) {
+                const stockMax = item.stock !== undefined ? item.stock : 0;
+                const cantidadValida = Math.max(1, Math.min(nuevaCantidad, stockMax));
+                
+                return { ...item, cantidad: cantidadValida };
+            }
+            return item;
+        }));
+    };
+
+    const cantidadTotal = carrito.reduce((acc, item) => acc + item.cantidad, 0);
+    const precioTotal = carrito.reduce((acc, item) => acc + (item.precio * item.cantidad), 0);
+
+    return (
+        <CarritoContext.Provider value={{
             carrito,
             agregarCarrito,
             eliminarCarrito,
             vaciarCarrito,
-            actualizarNumeroCarrito
-            }}>
+            actualizarCantidad, 
+            cantidadTotal,
+            precioTotal,
+            actualizarNumeroCarrito: cantidadTotal 
+        }}>
             {children}
-        </CarritoContexto.Provider>
-    )
-}
+        </CarritoContext.Provider>
+    );
+};
 
-export const useCart = () => useContext(CarritoContexto)
+export default CarritoContext;

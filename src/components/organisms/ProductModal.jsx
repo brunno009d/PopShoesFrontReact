@@ -4,7 +4,6 @@ import InputFile from '../atoms/InputFile';
 import { uploadImage } from '../../utils/uploadImage';
 
 function ProductModal({ isOpen, onClose, onSubmit, title, submitText, loading, initialData }) {
-    // Estado local del formulario
     const [formData, setFormData] = useState({
         titulo: '',
         descripcion: '',
@@ -12,11 +11,10 @@ function ProductModal({ isOpen, onClose, onSubmit, title, submitText, loading, i
         stock: '',
         imagen: ''
     });
-
+    
     const [uploading, setUploading] = useState(false);
     const [errorMsg, setErrorMsg] = useState('');
 
-    // Cargar datos cuando se abre para editar
     useEffect(() => {
         if (initialData) {
             setFormData({
@@ -37,7 +35,6 @@ function ProductModal({ isOpen, onClose, onSubmit, title, submitText, loading, i
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
-    // Logica de subida de imagen
     const handleImageUpload = async (e) => {
         const file = e.target.files[0];
         if (!file) return;
@@ -49,7 +46,7 @@ function ProductModal({ isOpen, onClose, onSubmit, title, submitText, loading, i
             setFormData(prev => ({ ...prev, imagen: url }));
         } catch (error) {
             console.error(error);
-            setErrorMsg("Error al subir imagen. Verifica tu API Key.");
+            setErrorMsg("Error al subir imagen. Verifica tu API Key en el archivo .env");
         } finally {
             setUploading(false);
         }
@@ -116,11 +113,15 @@ function ProductModal({ isOpen, onClose, onSubmit, title, submitText, loading, i
                     <InputFile onChange={handleImageUpload} label="Imagen del Producto" />
                     
                     {uploading && <div className="text-info mb-2">Subiendo imagen a la nube...</div>}
-                    
-                    {formData.imagen && (
+                    {formData.imagen && formData.imagen.length > 0 && (
                         <div className="mb-3 text-center">
                             <p className="small text-muted">Vista previa:</p>
-                            <img src={formData.imagen} alt="Preview" style={{ maxHeight: '100px' }} className="img-fluid rounded" />
+                            <img 
+                                src={formData.imagen} 
+                                alt="Preview" 
+                                style={{ maxHeight: '100px' }} 
+                                className="img-fluid rounded" 
+                            />
                         </div>
                     )}
 
