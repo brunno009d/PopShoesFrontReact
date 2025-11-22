@@ -11,6 +11,7 @@ import Registro from './pages/Registro';
 import Footer from './components/organisms/Footer';
 import NotFound from './pages/NotFound';
 import HomeAdmin from './pages/admin/HomeAdmin';
+import MiCuenta from './pages/MiCuenta';
 
 function App() {
   return (
@@ -26,7 +27,8 @@ function App() {
         <Route path="/login" element={<Login />} />    
         <Route path="/registro" element={<Registro />} />
         <Route path="/admin" element={<HomeAdmin />} />
-        <Route path="*" element={<NotFound />} />    
+        <Route path="*" element={<NotFound />} />
+        <Route path="/mi-cuenta" element={<MiCuenta />} />
       </Routes>
       <Footer />
     </>
