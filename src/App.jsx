@@ -10,7 +10,7 @@ import Login from './pages/Login';
 import Registro from './pages/Registro'; 
 import Footer from './components/organisms/Footer';
 import NotFound from './pages/NotFound';
-
+import HomeAdmin from './pages/admin/HomeAdmin';
 
 function App() {
   return (
@@ -25,7 +25,7 @@ function App() {
         <Route path="/blogs/:id" element={<DetalleBlog />} />    
         <Route path="/login" element={<Login />} />    
         <Route path="/registro" element={<Registro />} />
-        <Route path="/" element={<Home />} />    
+        <Route path="/admin" element={<HomeAdmin />} />
         <Route path="*" element={<NotFound />} />    
       </Routes>
       <Footer />
