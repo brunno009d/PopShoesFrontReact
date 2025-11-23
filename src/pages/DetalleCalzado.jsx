@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Spinner, Badge } from 'react-bootstrap';
-import { MockDatabase } from '../services/MockDatabase';
+import { MainService as MockDatabase } from '../services/MainService';
 import { useCart } from '../context/CarritoContext';
 import Imagen from '../components/atoms/Imagen';
 import Boton from '../components/atoms/Boton';

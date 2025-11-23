@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Table, Button, Badge, Tabs, Tab, Form, Spinner } from 'react-bootstrap';
-import { MockDatabase } from '../../services/MockDatabase';
+import { MainService as MockDatabase } from '../../services/MainService';
 import ProductModal from '../../components/organisms/ProductModal';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';

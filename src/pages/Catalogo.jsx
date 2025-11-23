@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Spinner } from 'react-bootstrap';
-import { MockDatabase } from '../services/MockDatabase';
+import { MainService as MockDatabase } from '../services/MainService';
 import CalzadoCard from '../components/organisms/CalzadoCard';
 import Texto from '../components/atoms/Texto';
 

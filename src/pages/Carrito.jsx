@@ -3,7 +3,7 @@ import { Container, Row, Col, Card, Form } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CarritoContext';
 import { useAuth } from '../context/AuthContext';
-import { MockDatabase } from '../services/MockDatabase';
+import { MainService as MockDatabase } from '../services/MainService';
 import Imagen from '../components/atoms/Imagen';
 import Boton from '../components/atoms/Boton';
 import Texto from '../components/atoms/Texto';
