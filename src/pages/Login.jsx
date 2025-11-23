@@ -12,10 +12,10 @@ const Login = () => {
   const [errores, setErrores] = useState({});
   const navigate = useNavigate();
   
-  // Extraemos la funcion login del contexto
   const { login } = useAuth(); 
 
-  const manejarEnvio = (e) => {
+  // CAMBIO 1: Agregamos 'async' aquí
+  const manejarEnvio = async (e) => {
     e.preventDefault();
     const nuevosErrores = {};
 
@@ -26,19 +26,24 @@ const Login = () => {
 
     if (Object.keys(nuevosErrores).length === 0) {
       
-      // Usamos la logica del contexto
-      const resultado = login(email, clave);
+      try {
+          // CAMBIO 2: Agregamos 'await' aquí para esperar a que Render responda
+          const resultado = await login(email, clave);
 
-      if (resultado.success) {
-        // Logica de redireccion basada en rol
-        if (resultado.role === 'admin') {
-            navigate('/admin'); 
-        } else {
-            alert('Bienvenido de nuevo');
-            navigate('/');
-        }
-      } else {
-        alert(resultado.message || 'Correo o clave incorrectos');
+          if (resultado.success) {
+            if (resultado.role === 'admin') {
+                navigate('/admin'); 
+            } else {
+                alert('Bienvenido de nuevo');
+                navigate('/');
+            }
+          } else {
+            // Aquí capturamos si la contraseña está mal
+            alert(resultado.message || 'Correo o clave incorrectos');
+          }
+      } catch (error) {
+          console.error("Error en login:", error);
+          alert("Hubo un error de conexión");
       }
     }
   };
@@ -80,7 +85,8 @@ const Login = () => {
         </Boton>
 
         <div className="mt-3 text-center text-muted small">
-            <small>Admin: admin@zapatillas.com / admin123</small>
+            {/* Ojo: el usuario que creaste es admin@popshoes.com, ajusta este texto si quieres recordar el real */}
+            <small>Usuario creado: admin@popshoes.com / 123456</small>
         </div>
 
         <Texto variant="p" className="text-center mt-3">
