@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Spinner, Badge } from 'react-bootstrap';
 import { MockDatabase } from '../services/MockDatabase';
 import { useCart } from '../context/CarritoContext';
@@ -9,7 +9,8 @@ import Texto from '../components/atoms/Texto';
 
 function DetalleCalzado() {
   const { id } = useParams();
-  const { agregarCarrito } = useCart();
+  const navigate = useNavigate();
+  const { agregarCarrito, carrito } = useCart();
   
   const [calzado, setCalzado] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -41,22 +42,47 @@ function DetalleCalzado() {
     return (
         <Container className="my-5 text-center">
             <Texto variant="h2">Producto no encontrado</Texto>
-            <Boton onClick={() => window.history.back()}>Volver</Boton>
+            <Boton onClick={() => navigate(-1)}>Volver</Boton>
         </Container>
     );
   }
 
-  // Verificamos si hay stock disponible
-  const hayStock = calzado.stock > 0;
+  // Logica de Estados (Stock y Carrito)
+  const stock = calzado.stock !== undefined ? calzado.stock : 0;
+  const hayStock = stock > 0;
+  const yaEnCarrito = carrito.some(item => item.id === calzado.id);
+
+  const handleAgregar = () => {
+    if (hayStock && !yaEnCarrito) {
+        agregarCarrito(calzado);
+    }
+  };
+
+  const getButtonProps = () => {
+      if (!hayStock) return { text: "Agotado", variant: "secondary", disabled: true };
+      if (yaEnCarrito) return { text: "Ya en carrito", variant: "secondary", disabled: true };
+      return { text: "Agregar al Carrito", variant: "primary", disabled: false };
+  };
+
+  const btnProps = getButtonProps();
 
   return (
-    <Container className="my-5">
+    <Container className="my-5 position-relative">
+      <div className="mb-4">
+        <Boton 
+            variant="outline-dark" 
+            onClick={() => navigate(-1)} 
+            className="d-flex align-items-center gap-2"
+        >
+            ← Volver
+        </Boton>
+      </div>
+
       <Row className="align-items-center">
         <Col md={6} className="mb-4 mb-md-0">
           <Imagen 
             src={calzado.imagen} 
             alt={calzado.titulo} 
-            className="img-fluid rounded shadow-lg"
             style={{ minHeight: '300px', objectFit: 'cover', width: '100%' }}
           />
         </Col>
@@ -65,7 +91,7 @@ function DetalleCalzado() {
           <div className="d-flex align-items-center gap-2 mb-2">
               <Badge bg="dark">{calzado.marca?.nombre || 'Marca'}</Badge>
               {hayStock ? (
-                  <Badge bg="success">Stock: {calzado.stock}</Badge>
+                  <Badge bg="success">Stock: {stock}</Badge>
               ) : (
                   <Badge bg="danger">Agotado</Badge>
               )}
@@ -74,28 +100,25 @@ function DetalleCalzado() {
           <Texto variant="h1" className="fw-bold mb-3">{calzado.titulo}</Texto>
           <Texto variant="h3" className="text-primary mb-4">${calzado.precio.toLocaleString()}</Texto>
           
-          <Texto variant="p" className="text-muted mb-4">
+          <Texto variant="p" className="text-muted mb-4 lead">
             {calzado.descripcion || "Sin descripcion disponible para este modelo."}
           </Texto>
 
           <div className="d-grid gap-2">
              <Boton 
-                onClick={() => {
-                    if (hayStock) {
-                        agregarCarrito(calzado);
-                        alert("Producto agregado al carrito");
-                    }
-                }} 
-                variant={hayStock ? "primary" : "secondary"} 
+                onClick={handleAgregar} 
+                variant={btnProps.variant} 
                 className="btn-lg"
-                disabled={!hayStock}
+                disabled={btnProps.disabled}
              >
-                {hayStock ? "Agregar al Carrito" : "Sin Stock"}
+                {btnProps.text}
              </Boton>
              
-             <Boton variant="outline-secondary" onClick={() => window.history.back()}>
-                Seguir Comprando
-             </Boton>
+             {yaEnCarrito && (
+                 <Boton variant="success" onClick={() => navigate('/carrito')}>
+                    Ir a Pagar
+                 </Boton>
+             )}
           </div>
         </Col>
       </Row>
