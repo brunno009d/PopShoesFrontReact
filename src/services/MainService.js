@@ -3,36 +3,57 @@ import { api } from './api';
 export const MainService = {
     // --- PRODUCTOS (CALZADOS) ---
     getProducts: async () => {
-        // CORRECCIÓN 1: La ruta real es /api/calzados
         const data = await api.get('/api/calzados');
         
-        // CORRECCIÓN 2: Traductor de variables (Java -> React)
-        // Si tu Java devuelve "nombre", aquí lo convertimos a "titulo" para que React lo entienda
+        // Mapeo de lectura (Java -> React)
         return data.map(item => ({
             id: item.id,
-            titulo: item.nombre || item.titulo, // Java usa 'nombre', React usa 'titulo'
+            // Java usa 'nombre', React usa 'titulo'
+            titulo: item.nombre || item.titulo, 
             precio: item.precio,
-            imagen: item.imagen,
+            // Gracias al @JsonProperty("imagen") en Java, aquí recibimos la URL directamente
+            imagen: item.imagen, 
             stock: item.stock,
             descripcion: item.descripcion,
+            // Guardamos las relaciones completas
             marca: item.marca, 
             genero: item.genero,
-            // Mantenemos el objeto original por si acaso
+            // Y mantenemos el resto
             ...item 
         }));
     },
 
     addProduct: async (prodData) => {
-        // Adaptamos el objeto para enviarlo como Java lo espera (usando 'nombre')
+        // Mapeo de escritura (React -> Java)
         const payload = {
-            ...prodData,
-            nombre: prodData.titulo // React envía titulo, Java guarda nombre
+            nombre: prodData.titulo,
+            descripcion: prodData.descripcion,
+            precio: prodData.precio,
+            stock: prodData.stock,
+            
+            // 1. TRUCO DE IMAGEN: Enviamos al campo @Transient
+            urlImagenInput: prodData.imagen, 
+            
+            // 2. RELACIONES: Java espera objetos, no solo IDs sueltos
+            marca: { id: prodData.marcaId }, 
+            genero: { id: prodData.generoId }
         };
+        
         return await api.post('/api/calzados', payload);
     },
     
     updateProduct: async (id, prodData) => {
-        const payload = { ...prodData, nombre: prodData.titulo };
+        const payload = {
+            nombre: prodData.titulo,
+            descripcion: prodData.descripcion,
+            precio: prodData.precio,
+            stock: prodData.stock,
+            urlImagenInput: prodData.imagen,
+            
+            // Validamos que existan antes de enviarlos para evitar errores en edición
+            marca: prodData.marcaId ? { id: prodData.marcaId } : undefined,
+            genero: prodData.generoId ? { id: prodData.generoId } : undefined
+        };
         return await api.put(`/api/calzados/${id}`, payload);
     },
     
@@ -41,14 +62,14 @@ export const MainService = {
     },
 
     // --- USUARIOS ---
-    // Asumo que tus controladores de usuarios también empiezan con /api
     getUsers: async () => {
-        return await api.get('/api/usuarios'); // Ajusta si es /users
+        return await api.get('/api/usuarios');
     },
     
     updateUser: async (id, userData) => {
         const updatedUser = await api.put(`/api/usuarios/${id}`, userData);
         
+        // Actualizar sesión si el usuario se editó a sí mismo
         const currentUser = localStorage.getItem('usuario') ? JSON.parse(localStorage.getItem('usuario')) : null;
         if (currentUser && currentUser.id === id) {
             const newSession = { ...currentUser, ...updatedUser };
@@ -63,11 +84,11 @@ export const MainService = {
 
     // --- VENTAS ---
     getSales: async () => {
-        return await api.get('/api/ventas'); // Ajusta si es /sales
+        return await api.get('/api/ventas');
     },
     
     getSalesByUserId: async (userId) => {
-        return await api.get(`/api/ventas/usuario/${userId}`); // Ajusta según tu Controller de Ventas
+        return await api.get(`/api/ventas/usuario/${userId}`);
     },
 
     addSale: async (saleData) => {
@@ -75,6 +96,6 @@ export const MainService = {
     },
 
     updateSaleStatus: async (id, newStatus) => {
-        return await api.put(`/api/ventas/${id}`, { estado: newStatus }); // Ajusta si es PATCH o PUT
+        return await api.put(`/api/ventas/${id}`, { estado: newStatus });
     }
 };
