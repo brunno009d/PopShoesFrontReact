@@ -9,7 +9,10 @@ function ProductModal({ isOpen, onClose, onSubmit, title, submitText, loading, i
         descripcion: '',
         precio: '',
         stock: '',
-        imagen: ''
+        imagen: '',
+        // AGREGAMOS VALORES POR DEFECTO (IDs que sabemos que existen en tu BD)
+        marcaId: '1', 
+        generoId: '1'
     });
     
     const [uploading, setUploading] = useState(false);
@@ -22,10 +25,14 @@ function ProductModal({ isOpen, onClose, onSubmit, title, submitText, loading, i
                 descripcion: initialData.descripcion || '',
                 precio: initialData.precio || '',
                 stock: initialData.stock || 0,
-                imagen: initialData.imagen || ''
+                imagen: initialData.imagen || '',
+                // Si editamos, intentamos recuperar el ID, si no, defecto 1
+                marcaId: initialData.marca?.id || '1',
+                generoId: initialData.genero?.id || '1'
             });
         } else {
-            setFormData({ titulo: '', descripcion: '', precio: '', stock: '', imagen: '' });
+            // Resetear al abrir modal vacío
+            setFormData({ titulo: '', descripcion: '', precio: '', stock: '', imagen: '', marcaId: '1', generoId: '1' });
         }
         setErrorMsg('');
     }, [initialData, isOpen]);
@@ -46,13 +53,17 @@ function ProductModal({ isOpen, onClose, onSubmit, title, submitText, loading, i
             setFormData(prev => ({ ...prev, imagen: url }));
         } catch (error) {
             console.error(error);
-            setErrorMsg("Error al subir imagen. Verifica tu API Key en el archivo .env");
+            setErrorMsg("Error al subir imagen. Verifica tu API Key.");
         } finally {
             setUploading(false);
         }
     };
 
     const handleSubmit = () => {
+        if (!formData.titulo || !formData.precio) {
+            setErrorMsg("Nombre y Precio son obligatorios");
+            return;
+        }
         onSubmit(formData);
     };
 
@@ -74,6 +85,32 @@ function ProductModal({ isOpen, onClose, onSubmit, title, submitText, loading, i
                         />
                     </Form.Group>
                     
+                    {/* --- NUEVA SECCIÓN: MARCA Y GÉNERO --- */}
+                    <div className="row">
+                        <div className="col-6">
+                            <Form.Group className="mb-3">
+                                <Form.Label>Marca</Form.Label>
+                                <Form.Select name="marcaId" value={formData.marcaId} onChange={handleChange}>
+                                    <option value="1">Nike</option>
+                                    <option value="2">Adidas</option>
+                                    <option value="3">Puma</option>
+                                    <option value="4">Vans</option>
+                                </Form.Select>
+                            </Form.Group>
+                        </div>
+                        <div className="col-6">
+                            <Form.Group className="mb-3">
+                                <Form.Label>Género</Form.Label>
+                                <Form.Select name="generoId" value={formData.generoId} onChange={handleChange}>
+                                    <option value="1">Hombre</option>
+                                    <option value="2">Mujer</option>
+                                    <option value="3">Unisex</option>
+                                </Form.Select>
+                            </Form.Group>
+                        </div>
+                    </div>
+                    {/* ------------------------------------- */}
+
                     <Form.Group className="mb-3">
                         <Form.Label>Descripcion</Form.Label>
                         <Form.Control 

@@ -11,7 +11,6 @@ export const MainService = {
             // Java usa 'nombre', React usa 'titulo'
             titulo: item.nombre || item.titulo, 
             precio: item.precio,
-            // Gracias al @JsonProperty("imagen") en Java, aquí recibimos la URL directamente
             imagen: item.imagen, 
             stock: item.stock,
             descripcion: item.descripcion,
@@ -30,8 +29,6 @@ export const MainService = {
             descripcion: prodData.descripcion,
             precio: prodData.precio,
             stock: prodData.stock,
-            
-            // 1. TRUCO DE IMAGEN: Enviamos al campo @Transient
             urlImagenInput: prodData.imagen, 
             
             // 2. RELACIONES: Java espera objetos, no solo IDs sueltos
