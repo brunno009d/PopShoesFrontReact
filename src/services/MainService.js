@@ -98,6 +98,6 @@ export const MainService = {
     },
 
     updateSaleStatus: async (id, newStatus) => {
-        return await api.patch(`/api/compras/${id}/estado`, { estado: newStatus === 'Entregado' });
+        return await api.patch(`/api/compras/${id}/estado`, { estado: newStatus });
     }
 };

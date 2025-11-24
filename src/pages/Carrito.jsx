@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, Form, Modal } from 'react-bootstrap';
+import { Container, Row, Col, Card, Form, Modal, Table } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CarritoContext';
 import { useAuth } from '../context/AuthContext';
@@ -19,6 +19,7 @@ function Carrito() {
   
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [procesando, setProcesando] = useState(false);
+  const [resumenCompra, setResumenCompra] = useState(null);
   
   const costoEnvio = 50000; 
   const subtotal = carrito.reduce((acc, item) => acc + (item.precio * item.cantidad), 0);
@@ -45,17 +46,21 @@ function Carrito() {
         setProcesando(true);
 
         try {
+            //  Reducir Stock
             const promesasStock = carrito.map(item => {
                 const nuevoStock = Math.max(0, (item.stock || 0) - item.cantidad);
                 return MainService.updateProduct(item.id, { stock: nuevoStock });
             });
             await Promise.all(promesasStock);
 
+            //  Guardar Direccion
             if (user.direccion !== direccionEnvio) {
                 try {
                     await MainService.updateUser(user.id, { direccion: direccionEnvio });
-                } catch (e) { console.warn("No se pudo guardar la dirección", e); }
+                } catch (e) { console.warn("No se pudo actualizar direccion", e); }
             }
+
+            // 3. Registrar Venta
             const nuevaVenta = {
                 usuario_id: user.id,
                 total: totalFinal,
@@ -69,8 +74,14 @@ function Carrito() {
             try {
                  await MainService.addSale(nuevaVenta);
             } catch (e) {
-                console.warn("Venta no registrada en historial, pero stock descontado.", e);
+                console.warn("Error guardando historial", e);
             }
+
+            setResumenCompra({
+                items: [...carrito],
+                total: totalFinal,
+                direccion: direccionEnvio
+            });
 
             setProcesando(false);
             vaciarCarrito();
@@ -79,7 +90,7 @@ function Carrito() {
         } catch (error) {
             console.error(error);
             setProcesando(false);
-            alert('Hubo un error crítico al procesar la compra. Intenta nuevamente.');
+            alert('Hubo un error crítico al procesar la compra.');
         }
     };
 
@@ -88,7 +99,7 @@ function Carrito() {
       navigate('/mi-cuenta');
   };
 
-  if (carrito.length === 0) {
+  if (carrito.length === 0 && !showSuccessModal) {
     return (
       <Container className="my-5 text-center">
         <Texto variant="h1" >Carrito de Compras</Texto>
@@ -121,12 +132,12 @@ function Carrito() {
                                 <div className="mb-2 mb-sm-0 me-sm-3 flex-grow-1">
                                     <Texto variant="h6" className="mb-1 fs-6 text-truncate">{calzado.titulo}</Texto>
                                     <Texto variant="p" className="text-muted small mb-2">
-                                        Precio: ${calzado.precio?.toLocaleString()} x {calzado.cantidad}
+                                        ${calzado.precio?.toLocaleString()} x {calzado.cantidad}
                                     </Texto>
                                     
                                     <div className="d-flex align-items-center">
                                         <Boton variant="outline-secondary" className="btn-sm px-2 py-0" onClick={() => actualizarCantidad(calzado.id, calzado.cantidad - 1)} disabled={calzado.cantidad <= 1}>-</Boton>
-                                        <span className="mx-2 fw-bold">{calzado.cantidad}</span>
+                                        <span className="mx-2 fw-bold px-2">{calzado.cantidad}</span>
                                         <Boton variant="outline-secondary" className="btn-sm px-2 py-0" onClick={() => actualizarCantidad(calzado.id, calzado.cantidad + 1)} disabled={calzado.cantidad >= (calzado.stock || 999)}>+</Boton>
                                     </div>
                                 </div>
@@ -145,7 +156,6 @@ function Carrito() {
         <Col lg={5}>
             <Card className="p-4 shadow-sm bg-light">
                 <Texto variant="h4" className="mb-3">Datos de Envio y Pago</Texto>
-                
                 <Form.Group className="mb-3">
                     <Form.Label>Metodo de Envio</Form.Label>
                     <Form.Select value={metodoEnvio} onChange={(e) => setMetodoEnvio(e.target.value)}>
@@ -153,12 +163,10 @@ function Carrito() {
                         <option value="BlueExpress">BlueExpress</option>
                     </Form.Select>
                 </Form.Group>
-
                 <Form.Group className="mb-3">
                     <Form.Label>Direccion de Entrega</Form.Label>
                     <Form.Control type="text" value={direccionEnvio} onChange={(e) => setDireccionEnvio(e.target.value)} placeholder="Ej: Calle Falsa 123" />
                 </Form.Group>
-
                 <Form.Group className="mb-4">
                     <Form.Label>Metodo de Pago</Form.Label>
                     <div className="d-flex gap-3">
@@ -166,12 +174,10 @@ function Carrito() {
                         <Form.Check type="radio" label="Transferencia" name="pago" checked={metodoPago === 'Transferencia'} onChange={() => setMetodoPago('Transferencia')} />
                     </div>
                 </Form.Group>
-
                 <hr />
                 <div className="d-flex justify-content-between mb-2"><Texto variant="p">Subtotal:</Texto><Texto variant="p">${subtotal.toLocaleString()}</Texto></div>
                 <div className="d-flex justify-content-between mb-3"><Texto variant="p">Envio:</Texto><Texto variant="p">${costoEnvio.toLocaleString()}</Texto></div>
                 <div className="d-flex justify-content-between mb-4"><Texto variant="h4" className="fw-bold">Total:</Texto><Texto variant="h4" className="fw-bold text-primary">${totalFinal.toLocaleString()}</Texto></div>
-
                 <Boton type="button" className="w-100 btn-lg" variant="primary" onClick={handleCheckout} disabled={procesando}>
                     {procesando ? 'Procesando...' : 'Pagar Ahora'}
                 </Boton>
@@ -179,16 +185,53 @@ function Carrito() {
         </Col>
       </Row>
 
-      <Modal show={showSuccessModal} onHide={handleCloseModal} centered backdrop="static">
-        <Modal.Header className="bg-success text-white border-0"><Modal.Title>¡Compra Exitosa!</Modal.Title></Modal.Header>
-        <Modal.Body className="text-center py-5">
-            <h4 className="fw-bold mb-3">Gracias, {user?.nombre}!</h4>
-            <p className="text-muted">Tu pedido sera enviado a: <strong>{direccionEnvio}</strong></p>
+      <Modal show={showSuccessModal} onHide={handleCloseModal} centered backdrop="static" size="lg">
+        <Modal.Header className="bg-success text-white border-0 justify-content-center">
+            <Modal.Title className="fw-bold">Felicidades por tu Compra</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="text-center py-4">
+            <div className="mb-4">
+                 <i className="bi bi-bag-check-fill text-success" style={{ fontSize: '4rem' }}></i>
+            </div>
+            
+            <h3 className="mb-3">¡Muchas gracias, {user?.nombre}!</h3>
+            <p className="text-muted lead">
+                El detalle de tu compra ha sido enviado a: <strong>{user?.email || user?.correo}</strong>
+            </p>
+            
+            <div className="bg-light p-3 rounded text-start mt-4 mx-auto" style={{ maxWidth: '90%' }}>
+                <h5 className="border-bottom pb-2 mb-3">Resumen del Pedido</h5>
+                <Table size="sm" borderless>
+                    <tbody>
+                        {resumenCompra?.items.map((item, idx) => (
+                            <tr key={idx}>
+                                <td>{item.cantidad} x {item.titulo}</td>
+                                <td className="text-end">${(item.precio * item.cantidad).toLocaleString()}</td>
+                            </tr>
+                        ))}
+                        <tr className="border-top">
+                            <td className="pt-2"><strong>Envío</strong></td>
+                            <td className="text-end pt-2">${costoEnvio.toLocaleString()}</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Total Pagado</strong></td>
+                            <td className="text-end text-success fw-bold">${resumenCompra?.total.toLocaleString()}</td>
+                        </tr>
+                    </tbody>
+                </Table>
+                <p className="small text-muted mt-2 mb-0">
+                    <i className="bi bi-geo-alt-fill"></i> Dirección de envío: {resumenCompra?.direccion}
+                </p>
+            </div>
+
         </Modal.Body>
         <Modal.Footer className="justify-content-center border-0 pb-4">
-            <Boton variant="success" onClick={handleCloseModal}>Continuar</Boton>
+            <Boton variant="success" size="lg" className="px-5" onClick={handleCloseModal}>
+                Volver a la Tienda
+            </Boton>
         </Modal.Footer>
       </Modal>
+
     </Container>
   );
 }
