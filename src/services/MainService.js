@@ -30,7 +30,6 @@ export const MainService = {
         return await api.post('/api/calzados', payload);
     },
     
-    // --- CAMBIO AQUI: Usamos PATCH ---
     updateProduct: async (id, prodData) => {
         const payload = {
             nombre: prodData.titulo,
@@ -42,7 +41,6 @@ export const MainService = {
             marca: prodData.marcaId ? { id: prodData.marcaId } : undefined,
             genero: prodData.generoId ? { id: prodData.generoId } : undefined
         };
-        // Cambiamos .put por .patch
         return await api.patch(`/api/calzados/${id}`, payload);
     },
     

@@ -57,7 +57,6 @@ export const api = {
         }
     },
 
-    // --- AGREGAMOS ESTO ---
     patch: async (endpoint, body) => {
         try {
             const res = await fetch(`${API_URL}${endpoint}`, {
