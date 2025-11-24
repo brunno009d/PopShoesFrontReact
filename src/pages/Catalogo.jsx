@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Spinner } from 'react-bootstrap';
-import { MainService as MockDatabase } from '../services/MainService';
+import { MainService, MainService as MockDatabase } from '../services/MainService';
 import CalzadoCard from '../components/organisms/CalzadoCard';
 import Texto from '../components/atoms/Texto';
 
@@ -10,7 +10,7 @@ function Catalogo() {
   useEffect(() => {
     const cargarProductos = async () => {
       try {
-        const data = await MockDatabase.getProducts();
+        const data = await MainService.getProducts();
         setProductos(data);
       } catch (error) {
         console.error("Error cargando catalogo", error);
