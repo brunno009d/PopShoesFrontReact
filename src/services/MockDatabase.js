@@ -1,12 +1,12 @@
 import productsData from '../data/calzados'; 
 
-// Datos iniciales de usuarios
+// Datos de usuarios
 const initialUsers = [
     { id: 1, nombre: "Admin Principal", email: "admin@zapatillas.com", role: "admin", direccion: "Oficina Central", imagen: "" },
     { id: 2, nombre: "Juan Cliente", email: "cliente@gmail.com", role: "user", direccion: "Av. Siempre Viva 123", imagen: "" }
 ];
 
-// Datos iniciales de ventas
+// Datos de ventas
 const initialSales = [
     { id: 101, usuario_id: 2, usuario: "Juan Cliente", total: 112000, fecha: "2023-11-20", estado: "Pendiente", items: 1, envio: "BlueExpress" },
     { id: 102, usuario_id: 2, usuario: "Juan Cliente", total: 89000, fecha: "2023-11-18", estado: "Entregado", items: 2, envio: "Chilexpress" },
@@ -24,7 +24,7 @@ const getStorage = (key, initial) => {
 const setStorage = (key, data) => localStorage.setItem(key, JSON.stringify(data));
 
 export const MockDatabase = {
-    // --- PRODUCTOS ---
+    // productos
     getProducts: async () => {
         return new Promise(resolve => setTimeout(() => resolve(getStorage('db_products', productsData)), 500));
     },
@@ -48,7 +48,7 @@ export const MockDatabase = {
         setStorage('db_products', filtered);
     },
 
-    // --- USUARIOS ---
+    // usuarios
     getUsers: async () => new Promise(resolve => setTimeout(() => resolve(getStorage('db_users', initialUsers)), 400)),
     
     // funcion para actualizar perfil de usuario
@@ -73,7 +73,7 @@ export const MockDatabase = {
         setStorage('db_users', users.filter(u => u.id !== id));
     },
 
-    // --- VENTAS ---
+    // ventas
     getSales: async () => new Promise(resolve => setTimeout(() => resolve(getStorage('db_sales', initialSales)), 400)),
     
     // Obtener ventas solo de un usuario especifico
