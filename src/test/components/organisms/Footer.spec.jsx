@@ -12,13 +12,11 @@ describe('Componente Footer', () => {
     expect(footerElement).toBeTruthy();
   });
 
-
   it('muestra el logo de PopShoes con el alt correcto', () => {
     const logo = screen.getByAltText('PopShoes');
     expect(logo).toBeTruthy();
     expect(logo.getAttribute('src')).toBe('/imghome/logo.webp');
   });
-
 
   it('muestra la sección de contacto con teléfono y correo', () => {
     expect(screen.getByText('Contacto')).toBeTruthy();
@@ -26,10 +24,9 @@ describe('Componente Footer', () => {
     expect(screen.getByText(/popshoes@gmail.com/)).toBeTruthy();
   });
 
-
   it('muestra la sección de métodos de pago', () => {
-    expect(screen.getByText('Métodos de pago')).toBeTruthy();
-    expect(screen.getByText(/Tarjetas/)).toBeTruthy();
-    expect(screen.getByText(/Transferencias/)).toBeTruthy();
+    expect(screen.getByText('Pagos')).toBeTruthy(); 
+    expect(screen.getByText(/Tarjetas Crédito\/Débito/)).toBeTruthy(); 
+    expect(screen.getByText(/Transferencia Bancaria/)).toBeTruthy(); 
   });
 });
