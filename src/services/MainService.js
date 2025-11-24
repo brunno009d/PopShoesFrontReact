@@ -1,6 +1,7 @@
 import { api } from './api';
 
 export const MainService = {
+    // PRODUCTOS 
     getProducts: async () => {
         const data = await api.get('/api/calzados');
         if (!Array.isArray(data)) return [];
@@ -37,7 +38,6 @@ export const MainService = {
             precio: prodData.precio,
             stock: prodData.stock,
             urlImagenInput: prodData.imagen,
-            
             marca: prodData.marcaId ? { id: prodData.marcaId } : undefined,
             genero: prodData.generoId ? { id: prodData.generoId } : undefined
         };
@@ -48,12 +48,14 @@ export const MainService = {
         return await api.delete(`/api/calzados/${id}`);
     },
 
+    //  USUARIOS 
     getUsers: async () => {
         return await api.get('/api/usuarios');
     },
     
     updateUser: async (id, userData) => {
-        const updatedUser = await api.put(`/api/usuarios/${id}`, userData);
+        const updatedUser = await api.patch(`/api/usuarios/${id}`, userData);
+
         const currentUser = localStorage.getItem('usuario') ? JSON.parse(localStorage.getItem('usuario')) : null;
         if (currentUser && currentUser.id === id) {
             const newSession = { ...currentUser, ...updatedUser };
@@ -66,19 +68,36 @@ export const MainService = {
         return await api.delete(`/api/usuarios/${id}`);
     },
 
+    // VENTAS / COMPRAS 
+    
     getSales: async () => {
-        return await api.get('/api/ventas');
+        return await api.get('/api/compras');
     },
     
     getSalesByUserId: async (userId) => {
-        return await api.get(`/api/ventas/usuario/${userId}`);
+        return await api.get(`/api/compras/usuario/${userId}`);
     },
 
     addSale: async (saleData) => {
-        return await api.post('/api/ventas', saleData);
+        const payload = {
+            total: saleData.total,
+            direccion: saleData.direccion,
+            envioNombre: saleData.envio, 
+            pagoNombre: saleData.pago,
+            usuario: { id: saleData.usuario_id },
+            detalles: saleData.detalle.map(item => ({
+                cantidad: item.cantidad,
+                calzado: { id: item.id },
+                precioUnitario: item.precio,
+                subtotal: item.precio * item.cantidad
+            }))
+        };
+
+        console.log("Enviando Compra a Java:", payload);
+        return await api.post('/api/compras', payload);
     },
 
     updateSaleStatus: async (id, newStatus) => {
-        return await api.put(`/api/ventas/${id}`, { estado: newStatus });
+        return await api.patch(`/api/compras/${id}/estado`, { estado: newStatus });
     }
 };

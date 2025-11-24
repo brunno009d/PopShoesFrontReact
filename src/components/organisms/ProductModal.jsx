@@ -10,7 +10,6 @@ function ProductModal({ isOpen, onClose, onSubmit, title, submitText, loading, i
         precio: '',
         stock: '',
         imagen: '',
-        // AGREGAMOS VALORES POR DEFECTO (IDs que sabemos que existen en tu BD)
         marcaId: '1', 
         generoId: '1'
     });
@@ -26,12 +25,10 @@ function ProductModal({ isOpen, onClose, onSubmit, title, submitText, loading, i
                 precio: initialData.precio || '',
                 stock: initialData.stock || 0,
                 imagen: initialData.imagen || '',
-                // Si editamos, intentamos recuperar el ID, si no, defecto 1
                 marcaId: initialData.marca?.id || '1',
                 generoId: initialData.genero?.id || '1'
             });
         } else {
-            // Resetear al abrir modal vacío
             setFormData({ titulo: '', descripcion: '', precio: '', stock: '', imagen: '', marcaId: '1', generoId: '1' });
         }
         setErrorMsg('');
@@ -85,7 +82,6 @@ function ProductModal({ isOpen, onClose, onSubmit, title, submitText, loading, i
                         />
                     </Form.Group>
                     
-                    {/* --- NUEVA SECCIÓN: MARCA Y GÉNERO --- */}
                     <div className="row">
                         <div className="col-6">
                             <Form.Group className="mb-3">
@@ -109,7 +105,6 @@ function ProductModal({ isOpen, onClose, onSubmit, title, submitText, loading, i
                             </Form.Group>
                         </div>
                     </div>
-                    {/* ------------------------------------- */}
 
                     <Form.Group className="mb-3">
                         <Form.Label>Descripcion</Form.Label>
