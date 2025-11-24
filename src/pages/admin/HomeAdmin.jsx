@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Table, Button, Badge, Tabs, Tab, Form, Spinner } from 'react-bootstrap';
-import { MainService as MockDatabase } from '../../services/MainService';
+import { Container, Table, Button, Badge, Tabs, Tab, Form, Spinner, Alert } from 'react-bootstrap';
+// Usamos el nombre real del servicio
+import { MainService } from '../../services/MainService';
 import ProductModal from '../../components/organisms/ProductModal';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
@@ -14,6 +15,7 @@ const HomeAdmin = () => {
     const [users, setUsers] = useState([]);
     const [sales, setSales] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
 
     // Estados de UI
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -21,7 +23,7 @@ const HomeAdmin = () => {
 
     // Seguridad: Redirigir si no esta logueado o no es admin
     useEffect(() => {
-        if (!user || user.role !== 'admin') {
+        if (!user || (user.role !== 'admin' && user.rol?.id !== 1)) {
             navigate('/login');
         } else {
             loadAllData();
@@ -30,34 +32,59 @@ const HomeAdmin = () => {
 
     const loadAllData = async () => {
         setLoading(true);
+        setError('');
+        
+        // 1. CARGAMOS PRODUCTOS (Lo más importante)
         try {
-            const [pData, uData, sData] = await Promise.all([
-                MockDatabase.getProducts(),
-                MockDatabase.getUsers(),
-                MockDatabase.getSales()
-            ]);
+            const pData = await MainService.getProducts();
             setProducts(pData);
-            setUsers(uData);
-            setSales(sData);
-        } catch (error) {
-            console.error("Error cargando datos", error);
-        } finally {
-            setLoading(false);
+        } catch (err) {
+            console.error("Error cargando productos:", err);
+            setError("Error al cargar productos. Revisa la consola.");
         }
+
+        // 2. CARGAMOS USUARIOS (Independiente)
+        try {
+            const uData = await MainService.getUsers();
+            setUsers(uData);
+        } catch (err) {
+            console.error("Error cargando usuarios:", err);
+            // No bloqueamos la UI si fallan los usuarios
+        }
+
+        // 3. CARGAMOS VENTAS (Independiente)
+        try {
+            const sData = await MainService.getSales();
+            setSales(sData);
+        } catch (err) {
+            console.error("Error cargando ventas:", err);
+            // No bloqueamos la UI si fallan las ventas
+        }
+
+        setLoading(false);
     };
 
     // Funciones de Productos
     const handleSaveProduct = async (formData) => {
-        if (editingProduct) await MockDatabase.updateProduct(editingProduct.id, formData);
-        else await MockDatabase.addProduct(formData);
-        setIsModalOpen(false);
-        loadAllData();
+        try {
+            if (editingProduct) await MainService.updateProduct(editingProduct.id, formData);
+            else await MainService.addProduct(formData);
+            
+            setIsModalOpen(false);
+            loadAllData(); // Recargar tabla
+        } catch (err) {
+            alert("Error al guardar: " + err.message);
+        }
     };
 
     const handleDeleteProduct = async (id) => {
         if (window.confirm("Eliminar producto permanentemente?")) {
-            await MockDatabase.deleteProduct(id);
-            loadAllData();
+            try {
+                await MainService.deleteProduct(id);
+                loadAllData();
+            } catch (err) {
+                alert("Error al eliminar: " + err.message);
+            }
         }
     };
 
@@ -65,7 +92,7 @@ const HomeAdmin = () => {
     const handleDeleteUser = async (id) => {
         if (window.confirm("Eliminar usuario?")) {
             try {
-                await MockDatabase.deleteUser(id);
+                await MainService.deleteUser(id);
                 loadAllData();
             } catch (e) { alert(e.message); }
         }
@@ -73,11 +100,12 @@ const HomeAdmin = () => {
 
     // Funciones de Ventas
     const handleStatusChange = async (id, newStatus) => {
-        await MockDatabase.updateSaleStatus(id, newStatus);
-        loadAllData();
+        try {
+            await MainService.updateSaleStatus(id, newStatus);
+            loadAllData();
+        } catch (e) { alert(e.message); }
     };
 
-    // Evitar renderizado si no hay usuario (mientras redirige)
     if (!user) return null;
 
     return (
@@ -85,16 +113,18 @@ const HomeAdmin = () => {
             <div className="d-flex justify-content-between align-items-center mb-4">
                 <h2>Panel de Administracion</h2>
                 <div className="d-flex gap-2 align-items-center">
-                    <span className="text-muted me-2">Hola, {user.name}</span>
+                    <span className="text-muted me-2">Hola, {user.nombre || user.name}</span>
                     <Button variant="outline-dark" size="sm" onClick={logout}>Cerrar Sesion</Button>
                 </div>
             </div>
+
+            {error && <Alert variant="warning">{error}</Alert>}
 
             {loading ? (
                 <div className="text-center py-5"><Spinner animation="border" /></div>
             ) : (
                 <Tabs defaultActiveKey="products" className="mb-3 bg-white rounded shadow-sm border-0 p-2">
-                    <Tab eventKey="products" title="Productos">
+                    <Tab eventKey="products" title={`Productos (${products.length})`}>
                         <div className="bg-white p-3 rounded shadow-sm">
                             <div className="d-flex justify-content-end mb-3">
                                 <Button variant="success" onClick={() => { setEditingProduct(null); setIsModalOpen(true); }}>
@@ -103,7 +133,14 @@ const HomeAdmin = () => {
                             </div>
                             <Table hover responsive>
                                 <thead className="table-light">
-                                    <tr><th>Img</th><th>Nombre</th><th>Precio</th><th>Stock</th><th>Acciones</th></tr>
+                                    <tr>
+                                        <th>Img</th>
+                                        <th>Nombre</th>
+                                        <th>Marca/Genero</th>
+                                        <th>Precio</th>
+                                        <th>Stock</th>
+                                        <th>Acciones</th>
+                                    </tr>
                                 </thead>
                                 <tbody>
                                     {products.map(p => (
@@ -112,10 +149,10 @@ const HomeAdmin = () => {
                                                 <img 
                                                     src={p.imagen} 
                                                     alt="p" 
-                                                    width="40" 
-                                                    height="40" 
-                                                    className="rounded object-fit-cover"
-                                                    onError={(e) => { e.target.onerror = null; e.target.src = "https://via.placeholder.com/40?text=X"; }} 
+                                                    width="50" 
+                                                    height="50" 
+                                                    className="rounded object-fit-cover border"
+                                                    onError={(e) => { e.target.onerror = null; e.target.src = "https://via.placeholder.com/50?text=X"; }} 
                                                 />
                                             </td>
                                             <td>
@@ -124,18 +161,30 @@ const HomeAdmin = () => {
                                                     {p.descripcion}
                                                 </small>
                                             </td>
-                                            <td>${p.precio}</td>
-                                            <td><Badge bg={p.stock > 5 ? 'success' : 'danger'}>{p.stock}</Badge></td>
                                             <td>
-                                                <Button size="sm" variant="outline-primary" className="me-1" onClick={() => { setEditingProduct(p); setIsModalOpen(true); }}>Editar</Button>
-                                                <Button size="sm" variant="outline-danger" onClick={() => handleDeleteProduct(p.id)}>Borrar</Button>
+                                                <Badge bg="secondary" className="me-1">{p.marca?.nombre || 'N/A'}</Badge>
+                                                <Badge bg="light" text="dark">{p.genero?.nombre || 'N/A'}</Badge>
+                                            </td>
+                                            <td>${p.precio?.toLocaleString()}</td>
+                                            <td>
+                                                <Badge bg={p.stock > 5 ? 'success' : 'danger'}>{p.stock}</Badge>
+                                            </td>
+                                            <td>
+                                                <Button size="sm" variant="outline-primary" className="me-1" onClick={() => { setEditingProduct(p); setIsModalOpen(true); }}>
+                                                    Editar
+                                                </Button>
+                                                <Button size="sm" variant="outline-danger" onClick={() => handleDeleteProduct(p.id)}>
+                                                    Borrar
+                                                </Button>
                                             </td>
                                         </tr>
                                     ))}
+                                    {products.length === 0 && <tr><td colSpan="6" className="text-center">No hay productos registrados</td></tr>}
                                 </tbody>
                             </Table>
                         </div>
                     </Tab>
+                    
                     <Tab eventKey="users" title="Usuarios">
                         <div className="bg-white p-3 rounded shadow-sm">
                             <Table hover>
@@ -144,10 +193,14 @@ const HomeAdmin = () => {
                                     {users.map(u => (
                                         <tr key={u.id} className="align-middle">
                                             <td>{u.nombre}</td>
-                                            <td>{u.email}</td>
-                                            <td><Badge bg={u.role === 'admin' ? 'dark' : 'info'}>{u.role}</Badge></td>
+                                            <td>{u.correo || u.email}</td>
                                             <td>
-                                                {u.role !== 'admin' && (
+                                                <Badge bg={u.rol?.id === 1 ? 'dark' : 'info'}>
+                                                    {u.rol?.id === 1 ? 'Admin' : 'Cliente'}
+                                                </Badge>
+                                            </td>
+                                            <td>
+                                                {u.rol?.id !== 1 && (
                                                     <Button size="sm" variant="outline-danger" onClick={() => handleDeleteUser(u.id)}>Eliminar</Button>
                                                 )}
                                             </td>
@@ -157,34 +210,39 @@ const HomeAdmin = () => {
                             </Table>
                         </div>
                     </Tab>
+
                     <Tab eventKey="sales" title="Ventas">
                         <div className="bg-white p-3 rounded shadow-sm">
-                            <Table hover>
-                                <thead className="table-light"><tr><th>#ID</th><th>Cliente</th><th>Fecha</th><th>Total</th><th>Estado</th><th>Gestion</th></tr></thead>
-                                <tbody>
-                                    {sales.map(s => (
-                                        <tr key={s.id} className="align-middle">
-                                            <td>{s.id}</td>
-                                            <td>{s.usuario}</td>
-                                            <td>{s.fecha}</td>
-                                            <td>${s.total.toLocaleString()}</td>
-                                            <td>
-                                                <Badge bg={s.estado === 'Entregado' ? 'success' : s.estado === 'Pendiente' ? 'warning' : 'primary'}>
-                                                    {s.estado}
-                                                </Badge>
-                                            </td>
-                                            <td>
-                                                <Form.Select size="sm" value={s.estado} onChange={(e) => handleStatusChange(s.id, e.target.value)}>
-                                                    <option value="Pendiente">Pendiente</option>
-                                                    <option value="Enviado">Enviado</option>
-                                                    <option value="Entregado">Entregado</option>
-                                                    <option value="Cancelado">Cancelado</option>
-                                                </Form.Select>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </Table>
+                            {sales.length === 0 ? (
+                                <p className="text-center text-muted">Aun no hay ventas registradas.</p>
+                            ) : (
+                                <Table hover>
+                                    <thead className="table-light"><tr><th>#ID</th><th>Cliente</th><th>Fecha</th><th>Total</th><th>Estado</th><th>Gestion</th></tr></thead>
+                                    <tbody>
+                                        {sales.map(s => (
+                                            <tr key={s.id} className="align-middle">
+                                                <td>{s.id}</td>
+                                                <td>{s.usuario?.nombre || 'Desconocido'}</td>
+                                                <td>{new Date(s.fecha).toLocaleDateString()}</td>
+                                                <td>${s.total?.toLocaleString()}</td>
+                                                <td>
+                                                    <Badge bg={s.estado === 'Entregado' ? 'success' : s.estado === 'Pendiente' ? 'warning' : 'primary'}>
+                                                        {s.estado}
+                                                    </Badge>
+                                                </td>
+                                                <td>
+                                                    <Form.Select size="sm" value={s.estado} onChange={(e) => handleStatusChange(s.id, e.target.value)}>
+                                                        <option value="Pendiente">Pendiente</option>
+                                                        <option value="Enviado">Enviado</option>
+                                                        <option value="Entregado">Entregado</option>
+                                                        <option value="Cancelado">Cancelado</option>
+                                                    </Form.Select>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </Table>
+                            )}
                         </div>
                     </Tab>
                 </Tabs>
