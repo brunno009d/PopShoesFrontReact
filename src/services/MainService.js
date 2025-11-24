@@ -1,19 +1,14 @@
 import { api } from './api';
 
 export const MainService = {
-    // --- PRODUCTOS (CALZADOS) ---
     getProducts: async () => {
-        // CORRECCIÓN: api.get ya devuelve los datos limpios (el array)
-        const data = await api.get('/api/calzados'); 
-        
-        // Verificamos que sea un array antes de mapear para evitar errores si está vacío
+        const data = await api.get('/api/calzados');
         if (!Array.isArray(data)) return [];
-
         return data.map(item => ({
             id: item.id,
             titulo: item.nombre || item.titulo,
             precio: item.precio,
-            imagen: item.imagen, // Ahora esto vendrá lleno gracias al @JsonProperty del Backend
+            imagen: item.imagen,
             stock: item.stock,
             descripcion: item.descripcion,
             marca: item.marca,
@@ -35,6 +30,7 @@ export const MainService = {
         return await api.post('/api/calzados', payload);
     },
     
+    // --- CAMBIO AQUI: Usamos PATCH ---
     updateProduct: async (id, prodData) => {
         const payload = {
             nombre: prodData.titulo,
@@ -42,24 +38,24 @@ export const MainService = {
             precio: prodData.precio,
             stock: prodData.stock,
             urlImagenInput: prodData.imagen,
+            
             marca: prodData.marcaId ? { id: prodData.marcaId } : undefined,
             genero: prodData.generoId ? { id: prodData.generoId } : undefined
         };
-        return await api.put(`/api/calzados/${id}`, payload);
+        // Cambiamos .put por .patch
+        return await api.patch(`/api/calzados/${id}`, payload);
     },
     
     deleteProduct: async (id) => {
         return await api.delete(`/api/calzados/${id}`);
     },
 
-    // --- USUARIOS ---
     getUsers: async () => {
         return await api.get('/api/usuarios');
     },
     
     updateUser: async (id, userData) => {
         const updatedUser = await api.put(`/api/usuarios/${id}`, userData);
-        
         const currentUser = localStorage.getItem('usuario') ? JSON.parse(localStorage.getItem('usuario')) : null;
         if (currentUser && currentUser.id === id) {
             const newSession = { ...currentUser, ...updatedUser };
@@ -72,7 +68,6 @@ export const MainService = {
         return await api.delete(`/api/usuarios/${id}`);
     },
 
-    // --- VENTAS ---
     getSales: async () => {
         return await api.get('/api/ventas');
     },

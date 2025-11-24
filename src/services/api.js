@@ -1,6 +1,5 @@
 const API_URL = import.meta.env.VITE_API_URL;
 
-// Helper: Busca el token en la caja fuerte (localStorage) del navegador
 const getAuthHeaders = () => {
     const token = localStorage.getItem('token');
     return token ? { 
@@ -12,7 +11,6 @@ const getAuthHeaders = () => {
 };
 
 export const api = {
-    // Peticion GET (Leer datos desde React hacia Java)
     get: async (endpoint) => {
         try {
             const res = await fetch(`${API_URL}${endpoint}`, {
@@ -27,7 +25,6 @@ export const api = {
         }
     },
 
-    // Peticion POST (Enviar datos: Login, Registro, Crear Prod)
     post: async (endpoint, body) => {
         try {
             const res = await fetch(`${API_URL}${endpoint}`, {
@@ -35,11 +32,8 @@ export const api = {
                 headers: getAuthHeaders(),
                 body: JSON.stringify(body)
             });
-            
-            // Manejo seguro por si el backend no devuelve JSON
             const text = await res.text();
             const data = text ? JSON.parse(text) : {};
-            
             if (!res.ok) throw new Error(data.message || `Error POST ${endpoint}`);
             return data;
         } catch (error) {
@@ -48,7 +42,6 @@ export const api = {
         }
     },
 
-    // Peticion PUT (Actualizar datos)
     put: async (endpoint, body) => {
         try {
             const res = await fetch(`${API_URL}${endpoint}`, {
@@ -64,7 +57,22 @@ export const api = {
         }
     },
 
-    // Peticion DELETE (Borrar datos)
+    // --- AGREGAMOS ESTO ---
+    patch: async (endpoint, body) => {
+        try {
+            const res = await fetch(`${API_URL}${endpoint}`, {
+                method: 'PATCH',
+                headers: getAuthHeaders(),
+                body: JSON.stringify(body)
+            });
+            if (!res.ok) throw new Error(`Error PATCH ${endpoint}`);
+            return await res.json();
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    },
+
     delete: async (endpoint) => {
         try {
             const res = await fetch(`${API_URL}${endpoint}`, {
