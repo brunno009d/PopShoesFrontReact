@@ -3,36 +3,35 @@ import { api } from './api';
 export const MainService = {
     // --- PRODUCTOS (CALZADOS) ---
     getProducts: async () => {
-    const response = await api.get('/api/calzados');
-    const data = response.data; // <-- AQUÍ ESTÁ LA CLAVE
+        // CORRECCIÓN: api.get ya devuelve los datos limpios (el array)
+        const data = await api.get('/api/calzados'); 
+        
+        // Verificamos que sea un array antes de mapear para evitar errores si está vacío
+        if (!Array.isArray(data)) return [];
 
-    return data.map(item => ({
-        id: item.id,
-        titulo: item.nombre || item.titulo,
-        precio: item.precio,
-        imagen: item.imagen,
-        stock: item.stock,
-        descripcion: item.descripcion,
-        marca: item.marca,
-        genero: item.genero,
-        ...item
-    }));
+        return data.map(item => ({
+            id: item.id,
+            titulo: item.nombre || item.titulo,
+            precio: item.precio,
+            imagen: item.imagen, // Ahora esto vendrá lleno gracias al @JsonProperty del Backend
+            stock: item.stock,
+            descripcion: item.descripcion,
+            marca: item.marca,
+            genero: item.genero,
+            ...item
+        }));
     },
 
     addProduct: async (prodData) => {
-        // Mapeo de escritura (React -> Java)
         const payload = {
             nombre: prodData.titulo,
             descripcion: prodData.descripcion,
             precio: prodData.precio,
             stock: prodData.stock,
             urlImagenInput: prodData.imagen, 
-            
-            // 2. RELACIONES: Java espera objetos, no solo IDs sueltos
             marca: { id: prodData.marcaId }, 
             genero: { id: prodData.generoId }
         };
-        
         return await api.post('/api/calzados', payload);
     },
     
@@ -43,8 +42,6 @@ export const MainService = {
             precio: prodData.precio,
             stock: prodData.stock,
             urlImagenInput: prodData.imagen,
-            
-            // Validamos que existan antes de enviarlos para evitar errores en edición
             marca: prodData.marcaId ? { id: prodData.marcaId } : undefined,
             genero: prodData.generoId ? { id: prodData.generoId } : undefined
         };
@@ -63,7 +60,6 @@ export const MainService = {
     updateUser: async (id, userData) => {
         const updatedUser = await api.put(`/api/usuarios/${id}`, userData);
         
-        // Actualizar sesión si el usuario se editó a sí mismo
         const currentUser = localStorage.getItem('usuario') ? JSON.parse(localStorage.getItem('usuario')) : null;
         if (currentUser && currentUser.id === id) {
             const newSession = { ...currentUser, ...updatedUser };
