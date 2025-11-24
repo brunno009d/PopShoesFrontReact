@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Table, Button, Badge, Tabs, Tab, Form, Spinner, Alert } from 'react-bootstrap';
-// Usamos el nombre real del servicio
 import { MainService } from '../../services/MainService';
 import ProductModal from '../../components/organisms/ProductModal';
 import { useAuth } from '../../context/AuthContext';
@@ -21,7 +20,6 @@ const HomeAdmin = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingProduct, setEditingProduct] = useState(null);
 
-    // Seguridad: Redirigir si no esta logueado o no es admin
     useEffect(() => {
         if (!user || (user.role !== 'admin' && user.rol?.id !== 1)) {
             navigate('/login');
@@ -34,7 +32,6 @@ const HomeAdmin = () => {
         setLoading(true);
         setError('');
         
-        // 1. CARGAMOS PRODUCTOS (Lo más importante)
         try {
             const pData = await MainService.getProducts();
             setProducts(pData);
@@ -43,22 +40,18 @@ const HomeAdmin = () => {
             setError("Error al cargar productos. Revisa la consola.");
         }
 
-        // 2. CARGAMOS USUARIOS (Independiente)
         try {
             const uData = await MainService.getUsers();
             setUsers(uData);
         } catch (err) {
             console.error("Error cargando usuarios:", err);
-            // No bloqueamos la UI si fallan los usuarios
         }
 
-        // 3. CARGAMOS VENTAS (Independiente)
         try {
             const sData = await MainService.getSales();
             setSales(sData);
         } catch (err) {
             console.error("Error cargando ventas:", err);
-            // No bloqueamos la UI si fallan las ventas
         }
 
         setLoading(false);

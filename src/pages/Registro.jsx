@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import Boton from '../components/atoms/Boton';
 import Texto from '../components/atoms/Texto';
 import { Container } from 'react-bootstrap';
-import { useAuth } from '../context/AuthContext'; // 1. Importar contexto
+import { useAuth } from '../context/AuthContext'; 
 
 const Registro = () => {
   const [nombre, setNombre] = useState('');
@@ -12,9 +12,9 @@ const Registro = () => {
   const [errores, setErrores] = useState({});
   
   const navigate = useNavigate();
-  const { register } = useAuth(); // 2. Sacar la funcion register
+  const { register } = useAuth(); 
 
-  const manejarEnvio = async (e) => { // Async para esperar al backend
+  const manejarEnvio = async (e) => { 
     e.preventDefault();
     const nuevosErrores = {};
 
@@ -25,7 +25,6 @@ const Registro = () => {
     setErrores(nuevosErrores);
 
     if (Object.keys(nuevosErrores).length === 0) {
-      // 3. Llamada Real al Backend
       const resultado = await register({ nombre, email, clave });
 
       if (resultado.success) {
@@ -50,8 +49,8 @@ const Registro = () => {
         <Container className="mb-3">
           <input
             type="text"
-            id="nombre" // Agregado para quitar warning
-            name="nombre" // Agregado para quitar warning
+            id="nombre" 
+            name="nombre" 
             placeholder="Nombre completo"
             value={nombre}
             onChange={(e) => setNombre(e.target.value)}
