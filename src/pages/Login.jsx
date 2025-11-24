@@ -14,7 +14,6 @@ const Login = () => {
   
   const { login } = useAuth(); 
 
-  // CAMBIO 1: Agregamos 'async' aquí
   const manejarEnvio = async (e) => {
     e.preventDefault();
     const nuevosErrores = {};
@@ -27,7 +26,6 @@ const Login = () => {
     if (Object.keys(nuevosErrores).length === 0) {
       
       try {
-          // CAMBIO 2: Agregamos 'await' aquí para esperar a que Render responda
           const resultado = await login(email, clave);
 
           if (resultado.success) {
@@ -38,7 +36,6 @@ const Login = () => {
                 navigate('/');
             }
           } else {
-            // Aquí capturamos si la contraseña está mal
             alert(resultado.message || 'Correo o clave incorrectos');
           }
       } catch (error) {
@@ -83,11 +80,6 @@ const Login = () => {
         <Boton type="submit" variant="primary" className="w-100">
           Entrar
         </Boton>
-
-        <div className="mt-3 text-center text-muted small">
-            {/* Ojo: el usuario que creaste es admin@popshoes.com, ajusta este texto si quieres recordar el real */}
-            <small>Usuario creado: admin@popshoes.com / 123456</small>
-        </div>
 
         <Texto variant="p" className="text-center mt-3">
           No tienes cuenta?{' '}
