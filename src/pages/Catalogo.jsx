@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Spinner } from 'react-bootstrap';
-import { MainService } from '../services/MainService';
 import CalzadoCard from '../components/organisms/CalzadoCard';
 import Texto from '../components/atoms/Texto';
+import { ProductService } from '../services/ProductService';
 
 function Catalogo() {
   const [productos, setProductos] = useState([]);
@@ -10,7 +10,7 @@ function Catalogo() {
   useEffect(() => {
     const cargarProductos = async () => {
       try {
-        const data = await MainService.getProducts();
+        const data = await ProductService.getAll();
         setProductos(data);
       } catch (error) {
         console.error("Error cargando catalogo", error);
