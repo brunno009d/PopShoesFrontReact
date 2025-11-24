@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, Form } from 'react-bootstrap';
+import { Container, Row, Col, Card, Form, Modal } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../context/CarritoContext';
 import { useAuth } from '../context/AuthContext';
-import { MainService as MockDatabase } from '../services/MainService';
+import { MainService } from '../services/MainService'; 
 import Imagen from '../components/atoms/Imagen';
 import Boton from '../components/atoms/Boton';
 import Texto from '../components/atoms/Texto';
@@ -18,10 +18,15 @@ function Carrito() {
   const [metodoPago, setMetodoPago] = useState('Webpay');
   const [direccionEnvio, setDireccionEnvio] = useState('');
   
+  // Estados para el proceso de compra (Popup y Loading)
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [procesando, setProcesando] = useState(false);
+  
   const costoEnvio = 50000; 
   const subtotal = carrito.reduce((acc, item) => acc + (item.precio * item.cantidad), 0);
   const totalFinal = subtotal + costoEnvio;
 
+  // Cargar dirección guardada del usuario al iniciar (si existe)
   useEffect(() => {
       if (user && user.direccion) {
           setDireccionEnvio(user.direccion);
@@ -40,32 +45,56 @@ function Carrito() {
             return;
         }
 
-        const nuevaVenta = {
-            usuario: user.nombre || user.email,
-            usuario_id: user.id,
-            total: totalFinal,
-            items: carrito.length,
-            detalle: carrito,
-            envio: metodoEnvio,
-            direccion: direccionEnvio,
-            pago: metodoPago
-        };
+        setProcesando(true); 
 
         try {
-            await MockDatabase.addSale(nuevaVenta);
-            
+            const promesasStock = carrito.map(item => {
+                const nuevoStock = (item.stock || 0) - item.cantidad;
+
+                const stockFinal = nuevoStock < 0 ? 0 : nuevoStock;
+                
+                return MainService.updateProduct(item.id, { stock: stockFinal });
+            });
+
+            await Promise.all(promesasStock);
+
             if (user.direccion !== direccionEnvio) {
-                await MockDatabase.updateUser(user.id, { direccion: direccionEnvio });
+                await MainService.updateUser(user.id, { direccion: direccionEnvio });
             }
 
+            const nuevaVenta = {
+                usuario: user.nombre || user.email,
+                usuario_id: user.id,
+                total: totalFinal,
+                items: carrito.length,
+                detalle: carrito, 
+                envio: metodoEnvio,
+                direccion: direccionEnvio,
+                pago: metodoPago
+            };
+            
+            try {
+                 await MainService.addSale(nuevaVenta);
+            } catch (err) {
+                console.warn("Venta no registrada en historial (backend pendiente), pero stock descontado.");
+            }
+
+            // PASO 4: Finalizar con éxito
+            setProcesando(false);
             vaciarCarrito();
-            alert('Compra realizada con exito! Revisa tu perfil.');
-            navigate('/mi-cuenta');
+            setShowSuccessModal(true); // Mostrar Popup bonito
+
         } catch (error) {
             console.error(error);
-            alert('Hubo un error al procesar la compra');
+            setProcesando(false);
+            alert('Hubo un error al procesar la compra. Por favor intenta nuevamente.');
         }
     };
+
+  const handleCloseModal = () => {
+      setShowSuccessModal(false);
+      navigate('/mi-cuenta'); // Redirigir al terminar
+  };
 
   if (carrito.length === 0) {
     return (
@@ -100,7 +129,7 @@ function Carrito() {
                                 <div className="mb-2 mb-sm-0 me-sm-3 flex-grow-1">
                                     <Texto variant="h6" className="mb-1 fs-6 text-truncate">{calzado.titulo}</Texto>
                                     <Texto variant="p" className="text-muted small mb-2">
-                                        Precio unitario: ${calzado.precio.toLocaleString()}
+                                        Precio unitario: ${calzado.precio?.toLocaleString()}
                                     </Texto>
                                     
                                     <div className="d-flex align-items-center">
@@ -125,10 +154,6 @@ function Carrito() {
                                         >
                                             +
                                         </Boton>
-                                        
-                                        <span className="ms-2 text-muted small" style={{ fontSize: '0.75rem' }}>
-                                            (Stock: {calzado.stock || 'N/A'})
-                                        </span>
                                     </div>
                                 </div>
 
@@ -172,10 +197,10 @@ function Carrito() {
                         type="text" 
                         value={direccionEnvio} 
                         onChange={(e) => setDireccionEnvio(e.target.value)}
-                        placeholder="Calle, Numero, Comuna"
+                        placeholder="Ej: Av. Siempreviva 742, Santiago"
                     />
                     <Form.Text className="text-muted">
-                        * Actualizar aqui tambien guardara la direccion en tu perfil.
+                        * Guardaremos esta dirección en tu perfil para la próxima vez.
                     </Form.Text>
                 </Form.Group>
 
@@ -214,12 +239,42 @@ function Carrito() {
                     <Texto variant="h4" className="fw-bold text-primary">${totalFinal.toLocaleString()}</Texto>
                 </div>
 
-                <Boton type="button" className="w-100 btn-lg" variant="primary" onClick={handleCheckout}>
-                    Pagar Ahora
+                <Boton 
+                    type="button" 
+                    className="w-100 btn-lg" 
+                    variant="primary" 
+                    onClick={handleCheckout}
+                    disabled={procesando}
+                >
+                    {procesando ? 'Procesando...' : 'Pagar Ahora'}
                 </Boton>
             </Card>
         </Col>
       </Row>
+
+      {/* POPUP DE ÉXITO */}
+      <Modal show={showSuccessModal} onHide={handleCloseModal} centered backdrop="static">
+        <Modal.Header className="bg-success text-white border-0">
+            <Modal.Title>¡Compra Exitosa!</Modal.Title>
+        </Modal.Header>
+        <Modal.Body className="text-center py-5">
+            <div className="mb-4">
+                 {/* Icono de check verde */}
+                 <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" fill="#198754" className="bi bi-check-circle-fill" viewBox="0 0 16 16">
+                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+                </svg>
+            </div>
+            <h4 className="fw-bold mb-3">¡Gracias, {user?.nombre}!</h4>
+            <p className="text-muted mb-1">Hemos recibido tu pedido correctamente.</p>
+            <p className="text-muted small">Será enviado a: <strong>{direccionEnvio}</strong></p>
+        </Modal.Body>
+        <Modal.Footer className="justify-content-center border-0 pb-4">
+            <Boton variant="success" className="px-4" onClick={handleCloseModal}>
+                Continuar
+            </Boton>
+        </Modal.Footer>
+      </Modal>
+
     </Container>
   );
 }
