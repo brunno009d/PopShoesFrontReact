@@ -3,23 +3,20 @@ import { api } from './api';
 export const MainService = {
     // --- PRODUCTOS (CALZADOS) ---
     getProducts: async () => {
-        const data = await api.get('/api/calzados');
-        
-        // Mapeo de lectura (Java -> React)
-        return data.map(item => ({
-            id: item.id,
-            // Java usa 'nombre', React usa 'titulo'
-            titulo: item.nombre || item.titulo, 
-            precio: item.precio,
-            imagen: item.imagen, 
-            stock: item.stock,
-            descripcion: item.descripcion,
-            // Guardamos las relaciones completas
-            marca: item.marca, 
-            genero: item.genero,
-            // Y mantenemos el resto
-            ...item 
-        }));
+    const response = await api.get('/api/calzados');
+    const data = response.data; // <-- AQUÍ ESTÁ LA CLAVE
+
+    return data.map(item => ({
+        id: item.id,
+        titulo: item.nombre || item.titulo,
+        precio: item.precio,
+        imagen: item.imagen,
+        stock: item.stock,
+        descripcion: item.descripcion,
+        marca: item.marca,
+        genero: item.genero,
+        ...item
+    }));
     },
 
     addProduct: async (prodData) => {
