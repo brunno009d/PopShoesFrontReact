@@ -119,19 +119,17 @@ function Carrito() {
             <Card key={calzado.id} className="mb-3 shadow-sm border-0">
                 <Card.Body className="p-2 p-sm-3">
                     <Row className="align-items-center g-3">
-                        <Col xs={4} sm={3}>
-                            <div className="bg-white rounded border d-flex align-items-center justify-content-center" style={{ height: '100px', width: '100px' }}>
-                                <Imagen 
-                                    src={calzado.imagen} 
-                                    alt={calzado.titulo} 
-                                    className="img-fluid"
-                                    style={{ 
-                                        maxHeight: '100%', 
-                                        maxWidth: '100%', 
-                                        objectFit: 'contain' 
-                                    }}
-                                />
-                            </div>
+                        <Col xs={4} sm={3} className="text-center">
+                            <Imagen 
+                                src={calzado.imagen} 
+                                alt={calzado.titulo} 
+                                className="img-fluid rounded"
+                                style={{ 
+                                    maxHeight: '120px', 
+                                    width: '100%',      
+                                    objectFit: 'contain' 
+                                }}
+                            />
                         </Col>
 
                         <Col xs={8} sm={9}>
@@ -164,7 +162,7 @@ function Carrito() {
             <Card className="p-4 shadow-sm bg-light border-0">
                 <Texto variant="h4" className="mb-3 fw-bold">Datos de Envío y Pago</Texto>
                 <Form.Group className="mb-3">
-                    <Form.Label>Método de Envío</Form.Label>
+                    <Form.Label>Metodo de Envio</Form.Label>
                     <Form.Select value={metodoEnvio} onChange={(e) => setMetodoEnvio(e.target.value)}>
                         <option value="Chileexpress">Chileexpress</option>
                         <option value="BlueExpress">BlueExpress</option>
@@ -183,7 +181,7 @@ function Carrito() {
                 </Form.Group>
                 <hr />
                 <div className="d-flex justify-content-between mb-2"><Texto variant="p">Subtotal:</Texto><Texto variant="p">${subtotal.toLocaleString()}</Texto></div>
-                <div className="d-flex justify-content-between mb-3"><Texto variant="p">Envío:</Texto><Texto variant="p">${costoEnvio.toLocaleString()}</Texto></div>
+                <div className="d-flex justify-content-between mb-3"><Texto variant="p">Envio:</Texto><Texto variant="p">${costoEnvio.toLocaleString()}</Texto></div>
                 <div className="d-flex justify-content-between mb-4"><Texto variant="h4" className="fw-bold">Total:</Texto><Texto variant="h4" className="fw-bold text-primary">${totalFinal.toLocaleString()}</Texto></div>
                 <Boton type="button" className="w-100 btn-lg" variant="primary" onClick={handleCheckout} disabled={procesando}>
                     {procesando ? 'Procesando...' : 'Pagar Ahora'}
@@ -194,14 +192,13 @@ function Carrito() {
 
       <Modal show={showSuccessModal} onHide={handleCloseModal} centered backdrop="static" size="lg">
         <Modal.Header className="bg-success text-white border-0 justify-content-center">
-            <Modal.Title className="fw-bold">¡Felicidades por tu Compra!</Modal.Title>
+            <Modal.Title className="fw-bold">Felicidades por tu Compra</Modal.Title>
         </Modal.Header>
         <Modal.Body className="text-center py-4">
             <div className="mb-4">
                  <i className="bi bi-bag-check-fill text-success" style={{ fontSize: '4rem' }}></i>
-                 <div style={{ fontSize: '4rem' }}>🛍️✨</div>
             </div>
-            <h3 className="mb-3">¡Muchas gracias, {user?.nombre}!</h3>
+            <h3 className="mb-3">Muchas gracias, {user?.nombre}!</h3>
             <p className="text-muted lead">
                 El detalle de tu compra ha sido enviado a: <strong>{user?.email || user?.correo}</strong>
             </p>
@@ -216,7 +213,7 @@ function Carrito() {
                             </tr>
                         ))}
                         <tr className="border-top">
-                            <td className="pt-2"><strong>Envío</strong></td>
+                            <td className="pt-2"><strong>Envio</strong></td>
                             <td className="text-end pt-2">${costoEnvio.toLocaleString()}</td>
                         </tr>
                         <tr>
@@ -226,7 +223,7 @@ function Carrito() {
                     </tbody>
                 </Table>
                 <p className="small text-muted mt-2 mb-0">
-                    <i className="bi bi-geo-alt-fill"></i> Dirección de envío: {resumenCompra?.direccion}
+                    <i className="bi bi-geo-alt-fill"></i> Direccion de envio: {resumenCompra?.direccion}
                 </p>
             </div>
         </Modal.Body>
