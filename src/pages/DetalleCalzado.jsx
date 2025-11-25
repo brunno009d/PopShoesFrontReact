@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Container, Row, Col, Spinner, Badge } from 'react-bootstrap';
+import { Container, Row, Col, Button, Spinner, Badge } from 'react-bootstrap';
 import { useCart } from '../context/CarritoContext';
+import { ProductService } from '../services/ProductService'; 
 import Imagen from '../components/atoms/Imagen';
 import Boton from '../components/atoms/Boton';
 import Texto from '../components/atoms/Texto';
@@ -13,57 +14,48 @@ function DetalleCalzado() {
   
   const [calzado, setCalzado] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [cantidad, setCantidad] = useState(1); 
 
   useEffect(() => {
     const cargarProducto = async () => {
       try {
-        const productos = await MockDatabase.getProducts();
-        const encontrado = productos.find(p => p.id.toString() === id.toString());
-        setCalzado(encontrado);
+        const data = await ProductService.getById(id);
+        setCalzado(data);
       } catch (error) {
         console.error("Error buscando producto", error);
+        navigate('/catalogo');
       } finally {
         setLoading(false);
       }
     };
-    cargarProducto();
-  }, [id]);
+    
+    if (id) cargarProducto();
+  }, [id, navigate]);
 
   if (loading) {
     return (
-        <Container className="my-5 text-center">
-            <Spinner animation="border" />
-        </Container>
+      <Container className="my-5 text-center">
+        <Spinner animation="border" />
+      </Container>
     );
   }
 
-  if (!calzado) {
-    return (
-        <Container className="my-5 text-center">
-            <Texto variant="h2">Producto no encontrado</Texto>
-            <Boton onClick={() => navigate(-1)}>Volver</Boton>
-        </Container>
-    );
-  }
+  if (!calzado) return null;
 
-  // Logica de Estados (Stock y Carrito)
   const stock = calzado.stock !== undefined ? calzado.stock : 0;
   const hayStock = stock > 0;
-  const yaEnCarrito = carrito.some(item => item.id === calzado.id);
+  const itemEnCarrito = carrito.find(item => item.id === calzado.id);
+  const cantidadEnCarrito = itemEnCarrito ? itemEnCarrito.cantidad : 0;
+  const puedeAgregar = hayStock && (cantidad + cantidadEnCarrito <= stock);
 
   const handleAgregar = () => {
-    if (hayStock && !yaEnCarrito) {
-        agregarCarrito(calzado);
+    if (puedeAgregar) {
+        agregarCarrito(calzado, cantidad);
+        alert("Producto agregado");
+    } else {
+        alert("No hay suficiente stock disponible");
     }
   };
-
-  const getButtonProps = () => {
-      if (!hayStock) return { text: "Agotado", variant: "secondary", disabled: true };
-      if (yaEnCarrito) return { text: "Ya en carrito", variant: "secondary", disabled: true };
-      return { text: "Agregar al Carrito", variant: "primary", disabled: false };
-  };
-
-  const btnProps = getButtonProps();
 
   return (
     <Container className="my-5 position-relative">
@@ -82,6 +74,7 @@ function DetalleCalzado() {
           <Imagen 
             src={calzado.imagen} 
             alt={calzado.titulo} 
+            className="img-fluid rounded shadow-sm border"
             style={{ minHeight: '300px', objectFit: 'cover', width: '100%' }}
           />
         </Col>
@@ -89,6 +82,7 @@ function DetalleCalzado() {
         <Col md={6}>
           <div className="d-flex align-items-center gap-2 mb-2">
               <Badge bg="dark">{calzado.marca?.nombre || 'Marca'}</Badge>
+              <Badge bg="secondary">{calzado.genero?.nombre || 'Género'}</Badge>
               {hayStock ? (
                   <Badge bg="success">Stock: {stock}</Badge>
               ) : (
@@ -97,23 +91,32 @@ function DetalleCalzado() {
           </div>
 
           <Texto variant="h1" className="fw-bold mb-3">{calzado.titulo}</Texto>
-          <Texto variant="h3" className="text-primary mb-4">${calzado.precio.toLocaleString()}</Texto>
+          <Texto variant="h3" className="text-success mb-4">${calzado.precio?.toLocaleString()}</Texto>
           
           <Texto variant="p" className="text-muted mb-4 lead">
-            {calzado.descripcion || "Sin descripcion disponible para este modelo."}
+            {calzado.descripcion || "Sin descripción disponible para este modelo."}
           </Texto>
+
+          {/* Selector de Cantidad */}
+          {hayStock && (
+              <div className="d-flex align-items-center gap-3 mb-4">
+                  <Button variant="outline-secondary" onClick={() => setCantidad(Math.max(1, cantidad - 1))}>-</Button>
+                  <span className="fw-bold fs-5">{cantidad}</span>
+                  <Button variant="outline-secondary" onClick={() => setCantidad(Math.min(stock - cantidadEnCarrito, cantidad + 1))}>+</Button>
+              </div>
+          )}
 
           <div className="d-grid gap-2">
              <Boton 
                 onClick={handleAgregar} 
-                variant={btnProps.variant} 
+                variant={hayStock ? "primary" : "secondary"} 
                 className="btn-lg"
-                disabled={btnProps.disabled}
+                disabled={!puedeAgregar}
              >
-                {btnProps.text}
+                {hayStock ? (puedeAgregar ? "Agregar al Carrito" : "Stock Máximo Alcanzado") : "Agotado"}
              </Boton>
              
-             {yaEnCarrito && (
+             {cantidadEnCarrito > 0 && (
                  <Boton variant="success" onClick={() => navigate('/carrito')}>
                     Ir a Pagar
                  </Boton>
