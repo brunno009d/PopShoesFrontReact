@@ -23,17 +23,17 @@ function Footer() {
             <p className="mb-0">📧 popshoes@gmail.com</p>
           </Col>
 
-          {/* Métodos de pago */}
+          {/* Pagos */}
           <Col md={3}>
             <h5 className="fw-bold mb-3 text-uppercase">Pagos</h5>
             <p className="mb-1">💳 Tarjetas Crédito/Débito</p>
             <p className="mb-0">💰 Transferencia Bancaria</p>
           </Col>
           
-          {/* Redes o Info Extra  */}
+          {/* Siguenos */}
           <Col md={3}>
              <h5 className="fw-bold mb-3 text-uppercase">Siguenos</h5>
-             <p className="small text-muted">
+             <p className="mb-0">
                Las mejores zapatillas urbanas y deportivas estan aqui.
              </p>
           </Col>
@@ -41,7 +41,7 @@ function Footer() {
         
         <hr className="my-4 border-secondary" />
         
-        <div className="text-center small text-muted">
+        <div className="text-center small">
             &copy; {new Date().getFullYear()} PopShoes. Todos los derechos reservados.
         </div>
       </Container>
