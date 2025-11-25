@@ -32,14 +32,7 @@ function DetalleCalzado() {
     if (id) cargarProducto();
   }, [id, navigate]);
 
-  if (loading) {
-    return (
-      <Container className="my-5 text-center">
-        <Spinner animation="border" />
-      </Container>
-    );
-  }
-
+  if (loading) return <Container className="my-5 text-center"><Spinner animation="border" /></Container>;
   if (!calzado) return null;
 
   const stock = calzado.stock !== undefined ? calzado.stock : 0;
@@ -51,9 +44,6 @@ function DetalleCalzado() {
   const handleAgregar = () => {
     if (puedeAgregar) {
         agregarCarrito(calzado, cantidad);
-        alert("Producto agregado");
-    } else {
-        alert("No hay suficiente stock disponible");
     }
   };
 
@@ -69,55 +59,68 @@ function DetalleCalzado() {
         </Boton>
       </div>
 
-      <Row className="align-items-center">
+      <Row className="align-items-center gx-5"> 
+        
         <Col md={6} className="mb-4 mb-md-0">
-          <Imagen 
-            src={calzado.imagen} 
-            alt={calzado.titulo} 
-            className="img-fluid rounded shadow-sm border"
-            style={{ minHeight: '300px', objectFit: 'cover', width: '100%' }}
-          />
+          <div 
+            className="bg-white rounded shadow-sm border d-flex align-items-center justify-content-center p-4"
+            style={{ height: '500px', width: '100%', overflow: 'hidden' }}
+          >
+              <Imagen 
+                src={calzado.imagen} 
+                alt={calzado.titulo} 
+                className="img-fluid"
+                style={{ 
+                    maxHeight: '100%', 
+                    maxWidth: '100%', 
+                    objectFit: 'contain' 
+                }}
+              />
+          </div>
         </Col>
         
         <Col md={6}>
-          <div className="d-flex align-items-center gap-2 mb-2">
-              <Badge bg="dark">{calzado.marca?.nombre || 'Marca'}</Badge>
-              <Badge bg="secondary">{calzado.genero?.nombre || 'Género'}</Badge>
+          <div className="d-flex align-items-center gap-2 mb-3">
+              <Badge bg="dark" className="px-3 py-2">{calzado.marca?.nombre || 'Marca'}</Badge>
+              <Badge bg="light" text="dark" className="border px-3 py-2">{calzado.genero?.nombre || 'Género'}</Badge>
               {hayStock ? (
-                  <Badge bg="success">Stock: {stock}</Badge>
+                  <Badge bg="success" className="px-3 py-2">Stock: {stock}</Badge>
               ) : (
-                  <Badge bg="danger">Agotado</Badge>
+                  <Badge bg="danger" className="px-3 py-2">Agotado</Badge>
               )}
           </div>
 
-          <Texto variant="h1" className="fw-bold mb-3">{calzado.titulo}</Texto>
-          <Texto variant="h3" className="text-success mb-4">${calzado.precio?.toLocaleString()}</Texto>
+          <Texto variant="h1" className="fw-bold mb-2 display-5">{calzado.titulo}</Texto>
+          <Texto variant="h3" className="text-success mb-4 fw-bold">${calzado.precio?.toLocaleString()}</Texto>
           
-          <Texto variant="p" className="text-muted mb-4 lead">
-            {calzado.descripcion || "Sin descripción disponible para este modelo."}
+          <Texto variant="p" className="text-muted mb-5 lead" style={{ lineHeight: '1.8' }}>
+            {calzado.descripcion || "Sin descripción disponible para este modelo. Diseño ergonómico y materiales de alta calidad."}
           </Texto>
 
           {/* Selector de Cantidad */}
           {hayStock && (
               <div className="d-flex align-items-center gap-3 mb-4">
-                  <Button variant="outline-secondary" onClick={() => setCantidad(Math.max(1, cantidad - 1))}>-</Button>
-                  <span className="fw-bold fs-5">{cantidad}</span>
-                  <Button variant="outline-secondary" onClick={() => setCantidad(Math.min(stock - cantidadEnCarrito, cantidad + 1))}>+</Button>
+                  <span className="fw-bold">Cantidad:</span>
+                  <div className="input-group" style={{ width: '140px' }}>
+                      <Button variant="outline-secondary" onClick={() => setCantidad(Math.max(1, cantidad - 1))}>-</Button>
+                      <span className="form-control text-center fw-bold border-secondary">{cantidad}</span>
+                      <Button variant="outline-secondary" onClick={() => setCantidad(Math.min(stock - cantidadEnCarrito, cantidad + 1))}>+</Button>
+                  </div>
               </div>
           )}
 
-          <div className="d-grid gap-2">
+          <div className="d-grid gap-3">
              <Boton 
                 onClick={handleAgregar} 
                 variant={hayStock ? "primary" : "secondary"} 
-                className="btn-lg"
+                className="btn-lg py-3 fw-bold"
                 disabled={!puedeAgregar}
              >
-                {hayStock ? (puedeAgregar ? "Agregar al Carrito" : "Stock Máximo Alcanzado") : "Agotado"}
+                {hayStock ? (puedeAgregar ? "Agregar al Carrito" : "Stock Máximo en Carrito") : "Producto Agotado"}
              </Boton>
              
              {cantidadEnCarrito > 0 && (
-                 <Boton variant="success" onClick={() => navigate('/carrito')}>
+                 <Boton variant="success" className="btn-lg py-3 fw-bold" onClick={() => navigate('/carrito')}>
                     Ir a Pagar
                  </Boton>
              )}
