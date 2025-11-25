@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Form, Table, Badge, Button, Alert, Tab, Nav } from 'react-bootstrap';
 import { useAuth } from '../context/AuthContext';
-import { MainService as MockDatabase } from '../services/MainService';
+import { SaleService } from '../services/SaleService';
 import { uploadImage } from '../utils/uploadImage';
 import InputFile from '../components/atoms/InputFile';
 import Texto from '../components/atoms/Texto';

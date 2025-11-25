@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Table, Button, Badge, Tabs, Tab, Form, Spinner, Alert } from 'react-bootstrap';
-import { MainService } from '../../services/MainService';
+import { ProductService } from '../../services/ProductService';
+import { UserService } from '../../services/UserService';
+import { SaleService } from '../../services/SaleService';
 import ProductModal from '../../components/organisms/ProductModal';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+
 
 const HomeAdmin = () => {
     const { user, logout } = useAuth();
