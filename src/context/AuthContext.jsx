@@ -73,8 +73,8 @@ export const AuthProvider = ({ children }) => {
                 contrasena: passwordToSend,
 
                 run: userData.run || runAleatorio,
-                apaterno: userData.apaterno || "ApellidoPaterno",
-                amaterno: userData.amaterno || "ApellidoMaterno",
+                apaterno: userData.a_paterno || "ApellidoPaterno",
+                amaterno: userData.a_materno || "ApellidoMaterno",
                 fechaNacimiento: "2000-01-01T00:00:00.000Z",
                 fechaCreacion: new Date().toISOString(),
                 rol: { id: 2 }
