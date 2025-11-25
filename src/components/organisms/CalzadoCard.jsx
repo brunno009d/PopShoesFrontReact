@@ -15,7 +15,7 @@ function CalzadoCard({ calzado }) {
   const stock = calzado.stock !== undefined ? calzado.stock : 0;
   const hayStock = stock > 0;
 
-  //  Ya esta en el carrito?
+  //  Validacion si ya esta en el carrito
   const yaEnCarrito = carrito.some(item => item.id === calzado.id);
 
   const handleComprar = () => {
@@ -24,6 +24,7 @@ function CalzadoCard({ calzado }) {
     }
   };
 
+  // Manejar el estado del boton Comprar
   const getButtonProps = () => {
       if (!hayStock) {
           return { text: "Agotado", variant: "secondary", disabled: true };
@@ -33,7 +34,6 @@ function CalzadoCard({ calzado }) {
       }
       return { text: "Comprar", variant: "success", disabled: false };
   };
-
   const btnProps = getButtonProps();
 
   return (

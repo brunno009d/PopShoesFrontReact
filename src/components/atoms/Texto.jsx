@@ -1,7 +1,7 @@
 import React from 'react';
 
 function Texto({ children, variant = 'p', className }) {
- const Tag = variant; // Puede ser 'h1', 'p', 'span', etc.
+ const Tag = variant; // Puede ser h1, p, span, etc.
  return <Tag className={className}>{children}</Tag>;
 }
 
