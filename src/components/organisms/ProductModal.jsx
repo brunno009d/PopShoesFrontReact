@@ -3,7 +3,12 @@ import { Modal, Button, Form, Spinner, Alert } from 'react-bootstrap';
 import InputFile from '../atoms/InputFile';
 import { uploadImage } from '../../utils/uploadImage';
 
+// Formulario para crear calzados
 function ProductModal({ isOpen, onClose, onSubmit, title, submitText, loading, initialData }) {
+    
+    // Estado del formulario
+    // Si esta vacio es un formulario para crear
+    // Si tiene datos es un formulario para editar
     const [formData, setFormData] = useState({
         titulo: '',
         descripcion: '',
@@ -14,11 +19,13 @@ function ProductModal({ isOpen, onClose, onSubmit, title, submitText, loading, i
         generoId: '1'
     });
     
+    // Estados para subir imagen y mensajes de error
     const [uploading, setUploading] = useState(false);
     const [errorMsg, setErrorMsg] = useState('');
 
     useEffect(() => {
         if (initialData) {
+            // Si vamos a editar carga los valores del producto
             setFormData({
                 titulo: initialData.titulo || '',
                 descripcion: initialData.descripcion || '',
@@ -29,16 +36,26 @@ function ProductModal({ isOpen, onClose, onSubmit, title, submitText, loading, i
                 generoId: initialData.genero?.id || '1'
             });
         } else {
-            setFormData({ titulo: '', descripcion: '', precio: '', stock: '', imagen: '', marcaId: '1', generoId: '1' });
+            // Si vamos a crear un producto quedan vacios los valores
+            setFormData({     
+                titulo: '',
+                descripcion: '',precio: '',
+                stock: '',
+                imagen: '',
+                marcaId: '1',
+                generoId: '1'
+            });
         }
         setErrorMsg('');
     }, [initialData, isOpen]);
 
+    // Manejar cambios en cualquier input
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
+    // Manejar subir imagenes
     const handleImageUpload = async (e) => {
         const file = e.target.files[0];
         if (!file) return;
@@ -56,6 +73,7 @@ function ProductModal({ isOpen, onClose, onSubmit, title, submitText, loading, i
         }
     };
 
+    // Enviar el formulario
     const handleSubmit = () => {
         if (!formData.titulo || !formData.precio) {
             setErrorMsg("Nombre y Precio son obligatorios");
