@@ -1,7 +1,16 @@
 import React from 'react';
 
-function Imagen({ src, alt, className }) {
-  return <img src={src} alt={alt} className={className} />;
+
+function Imagen({ src, alt, className, style, ...props }) {
+  return (
+    <img 
+        src={src} 
+        alt={alt} 
+        className={className} 
+        style={style} 
+        {...props} 
+    />
+  );
 }
 
 export default Imagen;
