@@ -1,10 +1,6 @@
 import Resizer from "react-image-file-resizer";
 
-/**
- * Comprime una imagen y la sube a ImgBB.
- * @param {File} file - El archivo de imagen seleccionado por el usuario.
- * @returns {Promise<string>} - Retorna la URL de la imagen subida o lanza un error.
- */
+
 export const uploadImage = async (file) => {
   const apiKey = import.meta.env.VITE_IMGBB_API_KEY;
   if (!apiKey) {
