@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card, Form, Table, Badge, Button, Alert, Tab, Nav } from 'react-bootstrap';
 import { useAuth } from '../context/AuthContext';
+import { UserService } from '../services/UserService';
 import { SaleService } from '../services/SaleService';
 import { uploadImage } from '../utils/uploadImage';
 import InputFile from '../components/atoms/InputFile';
@@ -25,7 +26,7 @@ const MiCuenta = () => {
 
     const cargarDatos = async () => {
         setLoading(true);
-        const misCompras = await MockDatabase.getSalesByUserId(user.id);
+        const misCompras = await SaleService.getByUser(user.id);
         setCompras(misCompras);
         setPerfilData({
             nombre: user.nombre || '',
@@ -38,7 +39,7 @@ const MiCuenta = () => {
     const handleUpdateProfile = async (e) => {
         e.preventDefault();
         try {
-            await MockDatabase.updateUser(user.id, perfilData);
+            await UserService.update(user.id, perfilData);
             setMsg({ type: 'success', text: 'Perfil actualizado correctamente' });
             window.location.reload(); 
         } catch (error) {
@@ -113,7 +114,7 @@ const MiCuenta = () => {
                                                 placeholder="Calle, Numero, Comuna"
                                             />
                                         </Form.Group>
-                                        <Button variant="primary" type="submit">Guardar Cambios</Button>
+                                        <Button variant="primary" type="submit">Actualizar Perfil</Button>
                                     </Form>
                                 </Card>
                             </Tab.Pane>
