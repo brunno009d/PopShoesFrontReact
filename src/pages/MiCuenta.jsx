@@ -130,16 +130,14 @@ const MiCuenta = () => {
                                                 <tr>
                                                     <th>Fecha</th>
                                                     <th>Total</th>
-                                                    <th>Envio</th>
                                                     <th>Estado</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 {compras.map(compra => (
                                                     <tr key={compra.id}>
-                                                        <td>{compra.fecha}</td>
-                                                        <td>${compra.total.toLocaleString()}</td>
-                                                        <td>{compra.envio}</td>
+                                                        <td>{new Date(compra.fecha).toLocaleDateString()}</td>
+                                                        <td>${compra.total.toLocaleString()}</td>                                        
                                                         <td>
                                                             <Badge bg={compra.estado === 'Entregado' ? 'success' : 'warning'}>
                                                                 {compra.estado}
