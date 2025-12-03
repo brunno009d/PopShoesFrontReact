@@ -14,7 +14,7 @@ const MiCuenta = () => {
     const [perfilData, setPerfilData] = useState({
         nombre: '',
         direccion: '',
-        imagen: ''
+        imagenUsuario: ''
     });
     const [msg, setMsg] = useState({ type: '', text: '' });
 
@@ -31,7 +31,7 @@ const MiCuenta = () => {
         setPerfilData({
             nombre: user.nombre || '',
             direccion: user.direccion || '',
-            imagen: user.imagen || ''
+            imagenUsuario: user.imagenUsuario || ''
         });
         setLoading(false);
     };
@@ -54,7 +54,7 @@ const MiCuenta = () => {
         setMsg({ type: 'info', text: 'Subiendo imagen...' });
         try {
             const url = await uploadImage(file);
-            setPerfilData(prev => ({ ...prev, imagen: url }));
+            setPerfilData(prev => ({ ...prev, imagenUsuario: url }));
             setMsg({ type: 'success', text: 'Imagen cargada. Recuerda guardar los cambios.' });
         } catch (error) {
             setMsg({ type: 'danger', text: 'Error al subir imagen' });
@@ -86,7 +86,7 @@ const MiCuenta = () => {
                                 <Card className="p-4 shadow-sm">
                                     <div className="text-center mb-4">
                                         <img 
-                                            src={perfilData.imagen || "https://via.placeholder.com/150"} 
+                                            src={perfilData.imagenUsuario || "https://via.placeholder.com/150"}
                                             alt="Perfil" 
                                             className="rounded-circle mb-3"
                                             style={{ width: '150px', height: '150px', objectFit: 'cover' }}
