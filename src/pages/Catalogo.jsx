@@ -4,6 +4,7 @@ import { ProductService } from '../services/ProductService';
 import CalzadoCard from '../components/organisms/CalzadoCard';
 import ProductFilters from '../components/organisms/ProductFilters'; 
 import Texto from '../components/atoms/Texto';
+import { Search } from 'react-bootstrap-icons';
 
 function Catalogo() {
   const [productos, setProductos] = useState([]);
@@ -92,7 +93,7 @@ function Catalogo() {
       <Row className="justify-content-center mb-5">
         <Col md={8} lg={6}>
             <InputGroup className="mb-3">
-                <InputGroup.Text id="basic-addon1">🔍</InputGroup.Text>
+                <InputGroup.Text id="basic-addon1"><Search size={18}/></InputGroup.Text>
                 <Form.Control
                     placeholder="Buscar zapatillas"
                     aria-label="Buscar"
