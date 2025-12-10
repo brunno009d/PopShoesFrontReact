@@ -121,7 +121,7 @@ function Catalogo() {
         </div>
       ) : (
         <Row>
-            <Col md={3} className="mb-4">
+            <Col md={2} className="mb-4">
                 <ProductFilters 
                     groups={filterConfig}
                     onClear={handleLimpiarTodo}
@@ -135,7 +135,7 @@ function Catalogo() {
                         key={calzado.id}
                         xs={12}    
                         sm={6}     
-                        lg={4}     
+                        lg={3}     
                         className="d-flex justify-content-center mb-4"
                     >
                         <CalzadoCard calzado={calzado} />
