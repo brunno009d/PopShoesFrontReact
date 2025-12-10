@@ -21,7 +21,7 @@ function NavBar() {
           onClick={() => navigate('/')}
         >
           <Image
-            src="/imghome/logo.webp" 
+            src="/imghome/logo2.webp" 
             alt="Logo PopShoes"
             height={75}
             className="me-2"
