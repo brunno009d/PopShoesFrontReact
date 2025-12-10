@@ -89,7 +89,7 @@ function Catalogo() {
     <Container className="my-5">
       <Texto variant="h1" className="text-center mb-4">Catálogo</Texto>
       
-      {/* Barra de busqeuda */}
+      {/* Barra de busqeudaa */}
       <Row className="justify-content-center mb-5">
         <Col md={8} lg={6}>
             <InputGroup className="mb-3">
