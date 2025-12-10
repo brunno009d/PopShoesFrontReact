@@ -75,7 +75,6 @@ function CalzadoCard({ calzado }) {
                         {calzado.titulo}
                     </Link>
                 }
-                descripcion={calzado.descripcion}
                 precio={calzado.precio?.toLocaleString()} 
             />
         </div>
