@@ -32,6 +32,24 @@ export const ProductService = {
         };
     },
 
+    getByName: async (nombre) => {
+        // Usamos encodeURIComponent para manejar espacios de los nombres dee las zapas
+        const data = await api.get(`/api/calzados/buscar/nombre?nombre=${encodeURIComponent(nombre)}`);
+        if (!Array.isArray(data)) return [];
+
+        return data.map(item => ({
+            id: item.id,
+            titulo: item.nombre || item.titulo,
+            precio: item.precio,
+            imagen: item.imagen, 
+            stock: item.stock,
+            descripcion: item.descripcion,
+            marca: item.marca,
+            genero: item.genero,
+            ...item
+        }));
+    },
+
     create: async (prodData) => {
         const payload = {
             nombre: prodData.titulo,
