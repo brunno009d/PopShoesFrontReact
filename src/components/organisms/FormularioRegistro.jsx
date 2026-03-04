@@ -5,7 +5,7 @@ const FormularioRegistro = ({ onSubmit }) => {
     const [formData, setFormData] = useState({
         nombre: "",
         a_paterno: "",
-        a_paterno: "",
+        a_materno: "",
         run: "",
         email: "",
         password: ""

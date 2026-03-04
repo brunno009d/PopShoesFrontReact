@@ -71,7 +71,7 @@ export const AuthProvider = ({ children }) => {
                 nombre: userData.nombre || "Usuario Sin Nombre",
                 correo: userData.email, 
                 contrasena: passwordToSend,
-                imagenUsuario: userData.iimagenUsuario,
+                imagenUsuario: userData.imagenUsuario,
                 run: userData.run || runAleatorio,
                 apaterno: userData.a_paterno || "ApellidoPaterno",
                 amaterno: userData.a_materno || "ApellidoMaterno",
